@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard | 44th UTech Marketing Seminar 2026</title>
+  <meta name="description" content="Admin check-in dashboard for the 44th UTech Marketing Seminar." />
+  <link rel="stylesheet" href="./css/styles.css" />
+  <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="container">
+      <a href="/" class="navbar-brand">
+        <img src="./assets/logo.png" alt="UTech Marketing Seminar" class="logo-img">
+        <span>UTech Marketing Seminar</span>
+      </a>
+      <ul class="navbar-links">
+        <li><a href="/"><i class="ph ph-house"></i> <span class="link-text">Home</span></a></li>
+        <li><a href="/admin.html" class="active"><i class="ph ph-clipboard-text"></i> <span class="link-text">Admin</span></a></li>
+        <li><a href="/setup.html"><i class="ph ph-gear"></i> <span class="link-text">Setup</span></a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main class="container">
+    <!-- Dashboard Header -->
+    <section class="section" style="padding-bottom: 0;">
+      <div class="admin-header animate-in">
+        <div>
+          <h1><i class="ph ph-clipboard-text" style="color: var(--navy);"></i> Check-in Dashboard</h1>
+          <p class="text-muted">Scan QR codes or manually check in attendees</p>
+        </div>
+        <div style="display: flex; align-items: center; gap: var(--space-sm);">
+          <span id="live-indicator" class="live-badge active" title="Auto-syncing with Google Sheets every 30s">
+            <span class="live-dot"></span> Live
+          </span>
+          <button class="btn btn-primary" id="refresh-btn" onclick="loadData()">
+            <i class="ph ph-arrows-clockwise"></i> Refresh
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Stats -->
+    <section class="animate-in animate-in-delay-1">
+      <div class="stats-grid">
+        <div class="card stat-card">
+          <div class="stat-value" id="stat-total">--</div>
+          <div class="stat-label">Total Attendees</div>
+        </div>
+        <div class="card stat-card">
+          <div class="stat-value" style="color: var(--success);" id="stat-checked">--</div>
+          <div class="stat-label">Checked In</div>
+        </div>
+        <div class="card stat-card">
+          <div class="stat-value" style="color: var(--warning);" id="stat-remaining">--</div>
+          <div class="stat-label">Remaining</div>
+        </div>
+        <div class="card stat-card">
+          <div class="stat-value" style="color: var(--gold-dark);" id="stat-percent">--%</div>
+          <div class="stat-label">Completion</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Progress Bar -->
+    <section class="animate-in animate-in-delay-1" style="margin-top: var(--space-md);">
+      <div class="card-static progress-container">
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" id="progress-fill" style="width: 0%;"></div>
+        </div>
+        <div class="progress-text">
+          <span id="progress-label">0 of 0 checked in</span>
+          <span id="progress-percent">0%</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- QR Scanner -->
+    <section class="section animate-in animate-in-delay-2">
+      <h2 class="section-title"><i class="ph ph-qr-code"></i> QR Code Scanner</h2>
+      <div class="card-static">
+        <div class="scanner-container">
+          <div id="qr-reader"></div>
+        </div>
+        <div style="text-align: center; margin-top: var(--space-md);">
+          <button class="btn btn-primary" id="start-scanner-btn">
+            <i class="ph ph-camera"></i> Start Scanner
+          </button>
+          <button class="btn btn-outline" id="stop-scanner-btn" style="display: none;">
+            <i class="ph ph-stop-circle"></i> Stop Scanner
+          </button>
+        </div>
+
+        <!-- Scan Result -->
+        <div class="scan-result" id="scan-result">
+          <div class="scan-result-icon" id="scan-icon"></div>
+          <div class="scan-result-name" id="scan-name"></div>
+          <div class="scan-result-role" id="scan-role"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Speaker Management -->
+    <section class="section animate-in animate-in-delay-2" id="speaker-management-section">
+      <h2 class="section-title"><i class="ph ph-microphone-stage"></i> Speaker Management</h2>
+      <div class="card-static">
+        <p class="text-muted" style="margin-bottom: var(--space-md);">Upload profile photos for speakers. These will instantly deploy to the live landing page.</p>
+        <div id="speakers-admin-list" style="display: grid; gap: var(--space-md); grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
+          <p class="text-muted text-center" style="grid-column: 1 / -1; padding: 2rem;">Loading speakers...</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Email Management -->
+    <section class="section animate-in animate-in-delay-2">
+      <h2 class="section-title"><i class="ph ph-envelope-simple"></i> Email Management</h2>
+      <div class="card-static">
+        <p class="text-muted" style="margin-bottom: var(--space-lg);">
+          Send personalized event passes with QR codes to attendees via email.
+        </p>
+
+        <!-- Test Email -->
+        <div style="display: flex; gap: var(--space-md); flex-wrap: wrap; align-items: flex-end; margin-bottom: var(--space-lg); padding-bottom: var(--space-lg); border-bottom: 1px solid var(--gray-200);">
+          <div style="flex: 1; min-width: 200px;">
+            <label style="font-size: 0.82rem; font-weight: 600; color: var(--gray-700); display: block; margin-bottom: var(--space-xs);">Send Test Email</label>
+            <input type="email" id="test-email-input" class="search-input" placeholder="Enter your email..." value="dsouden4@gmail.com" style="padding-left: 1rem;" />
+          </div>
+          <button class="btn btn-outline" id="test-email-btn" onclick="sendTestEmail()">
+            <i class="ph ph-paper-plane-tilt"></i> Send Test
+          </button>
+          <button class="btn btn-outline" id="preview-email-btn" onclick="previewEmailTemplate()">
+            <i class="ph ph-envelope-open"></i> Preview Template
+          </button>
+        </div>
+
+        <!-- Mass Send -->
+        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: var(--space-md);">
+          <div>
+            <p style="font-weight: 600; color: var(--gray-900); margin-bottom: 4px;">Send Emails</p>
+            <p style="font-size: 0.82rem; color: var(--gray-500);">Select attendees from the table below, or send to everyone at once.</p>
+          </div>
+          <div style="display: flex; gap: var(--space-sm); flex-wrap: wrap;">
+            <button class="btn btn-primary" id="send-selected-btn" onclick="sendSelectedEmails()" disabled>
+              <i class="ph ph-paper-plane-tilt"></i> Send to Selected (<span id="selected-count">0</span>)
+            </button>
+            <button class="btn btn-outline" id="send-all-btn" onclick="sendAllEmails()">
+              <i class="ph ph-paper-plane-tilt"></i> Send All
+            </button>
+          </div>
+        </div>
+
+        <!-- Email Progress -->
+        <div id="email-progress" style="display: none; margin-top: var(--space-lg);">
+          <div class="progress-bar-bg">
+            <div class="progress-bar-fill" id="email-progress-fill" style="width: 0%;"></div>
+          </div>
+          <p id="email-progress-text" style="font-size: 0.85rem; color: var(--gray-500); margin-top: var(--space-sm);">Preparing to send...</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Attendee List -->
+    <section class="section animate-in animate-in-delay-3">
+      <h2 class="section-title"><i class="ph ph-users"></i> Attendee List</h2>
+      <div class="card-static">
+        <div class="search-bar">
+          <div class="search-wrapper">
+            <i class="ph ph-magnifying-glass"></i>
+            <input type="text" class="search-input" id="search-input" placeholder="Search by name or ID..." />
+          </div>
+          <select class="filter-select" id="role-filter">
+            <option value="">All Roles</option>
+            <option value="Student">Student</option>
+            <option value="Facilitator">Facilitator</option>
+            <option value="Speaker">Speaker</option>
+            <option value="Guest">Guest</option>
+          </select>
+          <select class="filter-select" id="status-filter">
+            <option value="">All Status</option>
+            <option value="Checked In">Checked In</option>
+            <option value="Not Checked In">Not Checked In</option>
+          </select>
+        </div>
+
+        <div style="overflow-x: auto;">
+          <table class="data-table" id="attendee-table">
+            <thead>
+              <tr>
+                <th style="width: 40px;"><input type="checkbox" id="select-all-cb" title="Select all" /></th>
+                <th>Attendee</th>
+                <th>Role</th>
+                <th>Table</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="attendee-tbody">
+              <tr><td colspan="6" class="text-center text-muted" style="padding: 2rem;">Loading attendees...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Gallery Management -->
+    <section class="section animate-in animate-in-delay-2" id="gallery-management-section">
+      <h2 class="section-title"><i class="ph ph-images"></i> Gallery Management</h2>
+      <div class="card-static">
+        <p class="text-muted" style="margin-bottom: var(--space-md);">Upload photos to the public gallery. Images are automatically resized and cropped to fit perfectly.</p>
+
+        <!-- Upload Form -->
+        <div style="display: flex; gap: var(--space-md); flex-wrap: wrap; align-items: flex-end; margin-bottom: var(--space-lg); padding-bottom: var(--space-lg); border-bottom: 1px solid var(--gray-200);">
+          <div style="flex: 1; min-width: 200px;">
+            <label style="font-size: 0.82rem; font-weight: 600; color: var(--gray-700); display: block; margin-bottom: var(--space-xs);">Select Photo</label>
+            <input type="file" id="gallery-file-input" accept="image/*" class="search-input" style="padding: 0.5rem; padding-left: 1rem;" />
+          </div>
+          <div style="min-width: 150px;">
+            <label style="font-size: 0.82rem; font-weight: 600; color: var(--gray-700); display: block; margin-bottom: var(--space-xs);">Caption (optional)</label>
+            <input type="text" id="gallery-caption-input" class="search-input" placeholder="e.g. Keynote address" style="padding-left: 1rem;" />
+          </div>
+          <button class="btn btn-gold" id="gallery-upload-btn" onclick="uploadGalleryImage()">
+            <i class="ph ph-upload-simple"></i> Upload
+          </button>
+        </div>
+
+        <!-- Upload progress -->
+        <div id="gallery-upload-progress" style="display: none; margin-bottom: var(--space-lg);">
+          <div class="progress-bar-bg">
+            <div class="progress-bar-fill" style="width: 100%; animation: shimmer 1.5s infinite;"></div>
+          </div>
+          <p style="font-size: 0.85rem; color: var(--gray-500); margin-top: var(--space-sm);">Uploading and processing image...</p>
+        </div>
+
+        <!-- Gallery Grid -->
+        <div id="admin-gallery-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: var(--space-md);">
+          <p class="text-muted text-center" style="grid-column: 1 / -1; padding: 2rem;">Loading gallery...</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Email Preview Modal -->
+  <dialog id="email-preview-modal" style="border: none; border-radius: var(--radius-lg); padding: 0; box-shadow: var(--shadow-xl); max-width: 800px; width: 95%;">
+    <div style="display: flex; flex-direction: column; height: 80vh;">
+      <div style="padding: var(--space-md) var(--space-lg); border-bottom: 1px solid var(--gray-200); display: flex; justify-content: space-between; align-items: center; background: var(--white);">
+        <h3 style="margin: 0; display: flex; align-items: center; gap: var(--space-sm);"><i class="ph ph-envelope-open" style="color: var(--navy);"></i> Email Template Preview</h3>
+        <button class="btn btn-icon btn-outline" onclick="closeEmailPreview()" aria-label="Close" style="border: none; color: var(--gray-500);">
+          <i class="ph ph-x" style="font-size: 1.2rem;"></i>
+        </button>
+      </div>
+      <div style="flex: 1; background: var(--gray-100); overflow: hidden;">
+        <iframe id="email-preview-frame" style="width: 100%; height: 100%; border: none;"></iframe>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- html5-qrcode CDN -->
+  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+  <script src="./js/admin.js" type="module"></script>
+
+  <script>
+    // Auth guard
+    if (sessionStorage.getItem('admin_auth') !== 'true') {
+      window.location.href = '/login.html';
+    }
+  </script>
+
+</body>
+</html>

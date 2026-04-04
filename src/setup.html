@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Setup Guide | 44th UTech Marketing Seminar 2026</title>
+  <meta name="description" content="Step-by-step setup guide for configuring Google Sheets API integration." />
+  <link rel="stylesheet" href="./css/styles.css" />
+  <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="container">
+      <a href="/" class="navbar-brand">
+        <img src="./assets/logo.png" alt="UTech Marketing Seminar" class="logo-img">
+        <span>UTech Marketing Seminar</span>
+      </a>
+      <ul class="navbar-links">
+        <li><a href="/"><i class="ph ph-house"></i> <span class="link-text">Home</span></a></li>
+        <li><a href="/admin.html"><i class="ph ph-clipboard-text"></i> <span class="link-text">Admin</span></a></li>
+        <li><a href="/setup.html" class="active"><i class="ph ph-gear"></i> <span class="link-text">Setup</span></a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main class="container-sm">
+    <section class="section">
+      <div class="animate-in">
+        <h1 style="font-size: 1.8rem; margin-bottom: var(--space-xs);">
+          <i class="ph ph-gear" style="color: var(--navy);"></i> Setup Guide
+        </h1>
+        <p class="text-muted mb-xl">Follow these steps to configure Google Sheets API integration.</p>
+      </div>
+
+      <!-- Step 1 -->
+      <div class="card setup-step animate-in animate-in-delay-1">
+        <h3><span class="step-number">1</span> Create a Google Cloud Project</h3>
+        <p>Go to <a href="https://console.cloud.google.com" target="_blank">Google Cloud Console</a> and create a new project (or select an existing one).</p>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="card setup-step animate-in animate-in-delay-2">
+        <h3><span class="step-number">2</span> Enable Google Sheets API</h3>
+        <p>Navigate to <strong>APIs & Services → Library</strong>, search for <strong>Google Sheets API</strong>, and click <strong>Enable</strong>.</p>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="card setup-step animate-in animate-in-delay-3">
+        <h3><span class="step-number">3</span> Create a Service Account</h3>
+        <ol style="padding-left: var(--space-lg); margin-top: var(--space-sm); color: var(--gray-600);">
+          <li>Go to <strong>APIs & Services → Credentials</strong></li>
+          <li>Click <strong>Create Credentials → Service Account</strong></li>
+          <li>Give it a name (e.g., "Seminar Checkin")</li>
+          <li>Click <strong>Done</strong> (no need for optional permissions)</li>
+        </ol>
+      </div>
+
+      <!-- Step 4 -->
+      <div class="card setup-step animate-in animate-in-delay-4">
+        <h3><span class="step-number">4</span> Download the Credentials JSON</h3>
+        <ol style="padding-left: var(--space-lg); margin-top: var(--space-sm); color: var(--gray-600);">
+          <li>Click on the service account you just created</li>
+          <li>Go to the <strong>Keys</strong> tab</li>
+          <li>Click <strong>Add Key → Create New Key → JSON</strong></li>
+          <li>Rename the downloaded file to <code style="background: var(--gray-100); padding: 2px 6px; border-radius: 4px;">credentials.json</code></li>
+          <li>Move it to: <code style="background: var(--gray-100); padding: 2px 6px; border-radius: 4px;">server/credentials.json</code></li>
+        </ol>
+      </div>
+
+      <!-- Step 5 -->
+      <div class="card setup-step animate-in animate-in-delay-5">
+        <h3><span class="step-number">5</span> Set Up the Google Sheet</h3>
+        <p>Create a new Google Sheet and add these <strong>exact column headers</strong> in row 1:</p>
+        <div class="code-block">ID | Name | Email | Role | Table Number | Dietary Restrictions | Check-in Status | Check-in Time | QR Code URL</div>
+        <p style="margin-top: var(--space-md); font-size: 0.9rem;">Then share the sheet with your service account email (found in the JSON file under <code style="background: var(--gray-100); padding: 2px 6px; border-radius: 4px;">client_email</code>). Give it <strong>Editor</strong> access.</p>
+      </div>
+
+      <!-- Step 6 -->
+      <div class="card setup-step animate-in animate-in-delay-5">
+        <h3><span class="step-number">6</span> Configure Environment Variables</h3>
+        <p>Copy the <strong>Sheet ID</strong> from the URL of your Google Sheet:</p>
+        <div class="code-block">https://docs.google.com/spreadsheets/d/<strong>YOUR_SHEET_ID_HERE</strong>/edit</div>
+        <p style="margin-top: var(--space-md);">Then update the <code style="background: var(--gray-100); padding: 2px 6px; border-radius: 4px;">.env</code> file in the project root:</p>
+        <div class="code-block">GOOGLE_SHEET_ID=your_sheet_id_here</div>
+      </div>
+
+      <!-- Health Check -->
+      <div class="card animate-in animate-in-delay-5" style="text-align: center; margin-top: var(--space-lg);">
+        <h3 style="margin-bottom: var(--space-md);"><i class="ph ph-heartbeat" style="color: var(--navy);"></i> Connection Health Check</h3>
+        <p class="text-muted mb-lg">Click below to verify your API connection.</p>
+        <button class="btn btn-primary" id="health-check-btn">
+          <i class="ph ph-heartbeat"></i> Check Connection
+        </button>
+        <p id="health-result" style="margin-top: var(--space-md); font-weight: 600;"></p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2026 University of Technology, Jamaica &bull; 44th Marketing Seminar</p>
+    </div>
+  </footer>
+
+  <script>
+    // Auth guard
+    if (sessionStorage.getItem('admin_auth') !== 'true') {
+      window.location.href = '/login.html?redirect=setup';
+    }
+
+    // Health check
+    document.getElementById('health-check-btn').addEventListener('click', async () => {
+      const resultEl = document.getElementById('health-result');
+      resultEl.textContent = 'Checking...';
+      resultEl.style.color = 'var(--gray-500)';
+
+      try {
+        const res = await fetch('/api/health');
+        const data = await res.json();
+        if (data.status === 'ok') {
+          resultEl.innerHTML = '<i class="ph ph-check-circle"></i> Server connected successfully!';
+          resultEl.style.color = 'var(--success)';
+        }
+      } catch {
+        resultEl.innerHTML = '<i class="ph ph-x-circle"></i> Cannot reach the server. Is it running?';
+        resultEl.style.color = 'var(--danger)';
+      }
+    });
+  </script>
+
+</body>
+</html>

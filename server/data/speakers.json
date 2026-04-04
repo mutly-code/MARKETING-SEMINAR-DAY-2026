@@ -1,0 +1,102 @@
+[
+  {
+    "id": "speaker-1",
+    "name": "MP Damion Crawford",
+    "role": "Keynote Speaker",
+    "topic": "Thriving Under Pressure: Mastering Work-Life Harmony",
+    "image": "https://res.cloudinary.com/dvrzwuxaw/image/upload/v1775277970/Damion_Crawford_1_z8pxg4.jpg",
+    "bio": "Damion Crawford is a Jamaican politician, educator, and entrepreneur recognized for his dynamic leadership and ability to inspire audiences. He currently serves as the Opposition Spokesman on Education and Early Childhood Development and is the Member of Parliament for North West St. Catherine. A seasoned public servant, Crawford has also held pivotal roles as a State Minister and continues to be an influential voice in national development. Beyond politics, he is an academic and businessman, blending intellectual rigour with practical experience. His career is a testament to the keynote delivery theme, reflecting resilience under pressure, navigating public service, business ventures, and community engagement while maintaining a strong personal identity.",
+    "number": "01",
+    "title": "North West St Catherine MP"
+  },
+  {
+    "id": "speaker-2",
+    "name": "Brithney Clarke",
+    "role": "Speaker #2",
+    "topic": "Managing Digital Footprints and Ethical Online Behaviour",
+    "image": "https://res.cloudinary.com/dvrzwuxaw/image/upload/v1775277640/Brithney_Clarke_main_msd3yu.jpg",
+    "bio": "Brithney Clarke is the Miss Jamaica Festival Queen 2025, and currently serves as Business Marketing Lead and Public Relations Manager at Digicel Group. She has been recognized for her ability to merge cultural representation with corporate communications, a true embodiment of both national pride and professional excellence. At Digicel, she leads marketing initiatives and public relations strategies that strengthen brand identity and community engagement. Brithney is a true representation of not only Jamaica's heritage but also its future, using her platform to amplify a voice of integrity and serving as a role model for ethical leadership in the digital age.",
+    "number": "02",
+    "title": "Business Marketing Lead & PR Manager, Digicel Group"
+  },
+  {
+    "id": "speaker-3",
+    "name": "Anadeen Nembhard",
+    "role": "Speaker #3",
+    "topic": "Managing Digital Footprints and Ethical Online Behaviour",
+    "image": "https://res.cloudinary.com/dvrzwuxaw/image/upload/v1775278850/Anadeen_Nembhard_wsy0ym.jpg",
+    "bio": "Anadeen Nembhard is the Vice President, Head of People, Culture and Talent Management at Sygnus Group. She ideates and leads people and culture initiatives across Jamaica, Puerto Rico, St. Lucia, and the United States, enhancing employee engagement and organizational culture. She has developed and implemented talent management strategies that have resulted in reduced turnover rates while maintaining high retention and engagement. An alumnus of the University of Technology, Jamaica, where she majored in Marketing, Anadeen offers more than ten (10) years of experience in Human Resource Management from leading companies such as Caribbean Producers Jamaica Limited and Sagicor Group. Her career reflects an unwavering commitment to fostering inclusive, high-performing workplaces.",
+    "number": "03",
+    "title": "VP, Head of People, Culture & Talent Management, Sygnus Group"
+  },
+  {
+    "id": "speaker-4",
+    "name": "Dr Djavila Ho",
+    "role": "Speaker #4",
+    "topic": "Your Mind Is Your Brand: Safeguarding Mental Health",
+    "image": "https://res.cloudinary.com/dvrzwuxaw/image/upload/v1775278304/Djavila_Ho_atitfp.jpg",
+    "bio": "Dr Djavila Ho is a Licensed Associate Clinical Psychologist at K.A.D. Morgan & Associates and the Executive Director of KAHLE Journey Limited. As Executive Director, she manages the pillars of Advocacy and Learning Experiences, working to develop and promote a more trauma-informed Caribbean society. With expertise in clinical psychology and organizational well-being, Dr Ho is committed to advancing mental health awareness and equipping individuals with tools to thrive in demanding professional contexts. Her leadership reflects a dedication to both personal resilience and collective transformation.",
+    "number": "04",
+    "title": "Licensed Associate Clinical Psychologist, K.A.D. Morgan & Associates"
+  },
+  {
+    "id": "speaker-5",
+    "name": "Bryan Henry",
+    "role": "Speaker #5",
+    "topic": "Financial Confidence: Managing Income, Debt & Growth",
+    "image": "https://res.cloudinary.com/dvrzwuxaw/image/upload/v1775277970/Bryan_Henry_mahxhy.jpg",
+    "bio": "Bryan Henry is an experienced banking professional with a demonstrated history of success within the financial industry. He currently serves as Senior Investment Advisor at Barita Investments Limited, where he guides clients in building financial confidence and long-term stability. Possessing immense skill in business planning, research, data analytics, and public speaking, Bryan is known for translating complex financial concepts into actionable strategies. He is an alumnus of the University of Technology, Jamaica, with a BBA in Accounting and Marketing, and is currently pursuing an MSc in Management Information Systems. Beyond his corporate role, Bryan contributes to community development through leadership at the Jamaican Association for Debating and Empowerment (JADE) Limited and as an adjunct faculty at the University of the Commonwealth Caribbean (UCC).",
+    "number": "05",
+    "title": "Senior Investment Advisor, Barita Investments Limited"
+  },
+  {
+    "id": "panelist-1",
+    "name": "Glenessa Martin",
+    "role": "Panelist",
+    "topic": "Passion vs Paycheck: What Should Drive a Marketing Career",
+    "image": "https://res.cloudinary.com/dvrzwuxaw/image/upload/v1775278850/Glenessa_Martin_nyea8k.jpg",
+    "bio": "Glenessa Martin is a dynamic event planner and marketing professional with nearly a decade of experience delivering high-quality events across Jamaica. She currently serves as Marketing and Events Coordinator at the Tourism Enhancement Fund under the Ministry of Tourism, where she contributes to strategic initiatives that elevate Jamaica's tourism product through engaging campaigns and experiences. Her portfolio includes collaborations with major brands such as the Jamaica Tourist Boards and Appleton Estate, with significant contributions to large-scale productions such as Reggae Sumfest, the Jamaica Rum Festival, and the 2024 Boyz II Men live concert at the UWI Mona. Beyond her corporate role, Glenessa is the founder of Project Girl, a growing platform dedicated to creating opportunities and inspiring women to elevate their lives.",
+    "number": "06",
+    "title": "Marketing & Events Officer, Tourism Enhancement Fund"
+  },
+  {
+    "id": "panelist-2",
+    "name": "Wyomi Hopkins",
+    "role": "Panelist",
+    "topic": "Passion vs Paycheck: What Should Drive a Marketing Career",
+    "image": "https://res.cloudinary.com/dvrzwuxaw/image/upload/v1775278303/Wyomi_Hopkins_hchooo.jpg",
+    "bio": "Wyomi Hopkins is a young, trailblazing marketing professional; currently a Strategic Account Manager at Digicel Group, she is recognized for delivering growth while strengthening high-value client relationships and executing with precision in competitive markets. An alumnus of the University of Technology, Jamaica, Wyomi holds a BBA in Marketing, and previously served as the Chair of the 2025 UTech Jamaica Marketing Seminar, spearheading operations in sponsorship acquisition, budgeting, and brand enhancement, which has notably elevated the seminar's visibility and influence. Driven and forward-thinking, Wyomi is committed to elevating brands, influencing outcomes, and leading with purpose in the evolving business landscape.",
+    "number": "07",
+    "title": "Account Manager, Digicel Group"
+  },
+  {
+    "id": "panelist-3",
+    "name": "Kajay Rowe",
+    "role": "Panelist",
+    "topic": "Passion vs Paycheck: What Should Drive a Marketing Career",
+    "image": "https://res.cloudinary.com/dvrzwuxaw/image/upload/v1775278303/Kajay_Rowe_jjiuxm.jpg",
+    "bio": "Kajay Rowe is a trailblazing marketing leader with nearly a decade of experience spanning marketing, advertising, and technology. She currently serves as Senior Marketing Manager at Supreme Ventures Limited, where she drives digital marketing and communications strategies that strengthen brand presence and deliver measurable results. An alumnus of the University of Technology, Jamaica, holding a BSc in Information Technology, a foundation she has skillfully merged with marketing expertise to develop innovative, tech-enabled campaigns. Her expertise spans 360-degree marketing strategies, social media and online marketing, SEO/SEM, video editing, campaign management, and analytics. Known for her collaborative leadership and results-driven approach, she continues to elevate brands and expand digital footprints in today's evolving marketing landscape.",
+    "number": "08",
+    "title": "Senior Marketing Manager, Supreme Ventures Limited"
+  },
+  {
+    "id": "panelist-4",
+    "name": "Carlyle Grant",
+    "role": "Panelist",
+    "topic": "Passion vs Paycheck: What Should Drive a Marketing Career",
+    "image": "https://res.cloudinary.com/dvrzwuxaw/image/upload/v1775277969/Carlyle_Grant_cexnd3.jpg",
+    "bio": "Carlyle Grant is an entrepreneur, public speaker, and marketing strategist with more than fourteen years of experience leading innovative campaigns across the Caribbean and the United States. As Founder and Managing Director of Digital Dames, he specializes in brand strategy, content creation, and digital marketing, aiding clients in transforming ideas into measurable impact. A YLAI Fellow and trusted advisor to multinational brands, Mr Grant has consulted on projects ranging from youth digital communication for UNICEF Jamaica to international festival coverage in Bali. His career reflects a balance of passion and paycheck, building creative ventures that also deliver sustainable business value. Known for his ability to merge storytelling with strategy, Carlyle continues to mentor emerging professionals and champion marketing as both a craft and a career. His voice brings practical guidance on how passion and purpose can inform strategy while financial decisions secure longevity.",
+    "number": "09",
+    "title": "Founder & Managing Director, Digital Dames"
+  },
+  {
+    "id": "panelist-5",
+    "name": "Matthew Blake",
+    "role": "Speaker",
+    "topic": "Passion vs Paycheck: Public Relations Perspectives",
+    "image": "https://images.unsplash.com/photo-1557862921-37829c790f19?w=500&h=700&fit=crop",
+    "bio": "Matthew Blake is a dynamic communications professional serving as Public Relations Officer at Jamaica’s Ministry of Tourism. With a First-Class Honours BA in Journalism and International Relations, Mr Blake brings a strong foundation in media strategy and public affairs. His career began at the Office of the Prime Minister, where he contributed to national communications and digital brand management, producing content that reached millions across traditional and contemporary platforms. He has since expanded his expertise through roles in social media strategy supporting major brands and government agencies alike. Matthew is passionate about public relations, digital brand communication and marketing; particularly thriving on crafting messages which strengthen visibility and connect audiences effectively. Currently pursuing graduate studies in Integrated Marketing Communication, he continues to merge academic insight with professional practice, offering a fresh perspective on how passion and paycheck intersect in communication careers.",
+    "number": "10",
+    "title": "Public Relations Officer, Ministry of Tourism"
+  }
+]

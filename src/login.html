@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Login | 44th UTech Marketing Seminar 2026</title>
+  <link rel="stylesheet" href="./css/styles.css" />
+  <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+</head>
+<body>
+
+  <div class="login-page">
+    <div class="login-card animate-in">
+      <img src="./assets/logo.png" alt="UTech Marketing Seminar" class="logo-img">
+      <h1>Admin Access</h1>
+      <p class="subtitle">Enter the admin passcode to continue.</p>
+
+      <form class="login-form" id="login-form">
+        <div class="form-group">
+          <label for="passcode">Passcode</label>
+          <input type="password" id="passcode" name="passcode" placeholder="Enter admin passcode" autocomplete="off" required />
+        </div>
+        <p class="login-error" id="login-error">Incorrect passcode. Please try again.</p>
+        <button type="submit" class="btn btn-primary btn-lg">
+          <i class="ph ph-sign-in"></i> Sign In
+        </button>
+      </form>
+
+      <p style="margin-top: var(--space-xl); font-size: 0.82rem; color: var(--gray-400);">
+        <a href="/" style="color: var(--gray-500);"><i class="ph ph-arrow-left"></i> Back to Home</a>
+      </p>
+    </div>
+  </div>
+
+  <script>
+    // Check if already logged in
+    if (sessionStorage.getItem('admin_auth') === 'true') {
+      const params = new URLSearchParams(window.location.search);
+      const redirect = params.get('redirect');
+      if (redirect === 'setup') {
+        window.location.href = '/setup.html';
+      } else {
+        window.location.href = '/admin.html';
+      }
+    }
+
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const passcode = document.getElementById('passcode').value;
+      const errorEl = document.getElementById('login-error');
+      errorEl.style.display = 'none';
+
+      try {
+        const res = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ passcode }),
+        });
+
+        const data = await res.json();
+
+        if (data.success) {
+          sessionStorage.setItem('admin_auth', 'true');
+          const params = new URLSearchParams(window.location.search);
+          const redirect = params.get('redirect');
+          if (redirect === 'setup') {
+            window.location.href = '/setup.html';
+          } else {
+            window.location.href = '/admin.html';
+          }
+        } else {
+          errorEl.style.display = 'block';
+          document.getElementById('passcode').value = '';
+          document.getElementById('passcode').focus();
+        }
+      } catch {
+        // Server unavailable — show connection error
+        errorEl.textContent = 'Unable to connect to server. Please try again later.';
+        errorEl.style.display = 'block';
+        document.getElementById('passcode').value = '';
+      }
+    });
+  </script>
+
+</body>
+</html>
