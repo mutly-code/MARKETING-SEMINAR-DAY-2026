@@ -1,6 +1,6 @@
 import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
-import { readFileSync } from 'fs';
+import { readFileSync, existsSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { generateQRCode } from './qrcode.js';
@@ -8,6 +8,8 @@ import { generateQRCode } from './qrcode.js';
 dotenv.config();
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
+
+// Logo is always available in src/assets/ (repo files persist on Render)
 const LOGO_PATH = join(__dirname, '..', 'src', 'assets', 'logo.png');
 
 const EMAIL_USER = process.env.EMAIL_USER;
