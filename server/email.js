@@ -187,7 +187,6 @@ export function buildEmailHtml(attendee) {
 </body>
 </html>`;
 }
-}
 
 /**
  * Send a personalized email to a single attendee
