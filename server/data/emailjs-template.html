@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
+  <meta name="supported-color-schemes" content="light dark">
+  <!--[if !mso]><!-->
+  <style>
+    /* Color scheme declaration */
+    :root {
+      color-scheme: light dark;
+      supported-color-schemes: light dark;
+    }
+    
+    /* Base styles for all modes */
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ========== LIGHT MODE (Default) ========== */
+    .email-bg { background-color: #F8FAFC; }
+    .email-card { background-color: #ffffff; }
+    .details-box { background-color: #F8FAFC; border-color: #E2E8F0; }
+    .text-dark { color: #0F172A; }
+    .text-body { color: #334155; }
+    .text-muted { color: #64748B; }
+    .text-light-muted { color: #94A3B8; }
+    .schedule-time { color: #0A1628; }
+    .schedule-text { color: #475569; }
+    .qr-wrapper { background-color: #ffffff; border-color: #E2E8F0; }
+    .link-blue { color: #3B82F6; }
+
+    /* ========== DARK MODE - iOS Mail, Apple Mail, macOS ========== */
+    @media (prefers-color-scheme: dark) {
+      .email-bg { background-color: #0F172A !important; }
+      .email-card { background-color: #1E293B !important; }
+      .details-box { background-color: #0F172A !important; border-color: #334155 !important; }
+      .text-dark { color: #F1F5F9 !important; }
+      .text-body { color: #E2E8F0 !important; }
+      .text-muted { color: #94A3B8 !important; }
+      .text-light-muted { color: #64748B !important; }
+      .schedule-time { color: #F1F5F9 !important; }
+      .schedule-text { color: #CBD5E1 !important; }
+      .qr-wrapper { background-color: #ffffff !important; border-color: #ffffff !important; }
+      .link-blue { color: #60A5FA !important; }
+    }
+
+    /* ========== DARK MODE - Outlook (Windows) ========== */
+    [data-ogsc] .email-bg { background-color: #0F172A !important; }
+    [data-ogsc] .email-card { background-color: #1E293B !important; }
+    [data-ogsc] .details-box { background-color: #0F172A !important; border-color: #334155 !important; }
+    [data-ogsc] .text-dark { color: #F1F5F9 !important; }
+    [data-ogsc] .text-body { color: #E2E8F0 !important; }
+    [data-ogsc] .text-muted { color: #94A3B8 !important; }
+    [data-ogsc] .schedule-time { color: #F1F5F9 !important; }
+    [data-ogsc] .schedule-text { color: #CBD5E1 !important; }
+
+    /* ========== DARK MODE - Gmail Android ========== */
+    u + .body .email-bg { background-color: #0F172A !important; }
+    u + .body .email-card { background-color: #1E293B !important; }
+    u + .body .details-box { background-color: #0F172A !important; border-color: #334155 !important; }
+    u + .body .text-dark { color: #F1F5F9 !important; }
+    u + .body .text-body { color: #E2E8F0 !important; }
+    u + .body .schedule-time { color: #F1F5F9 !important; }
+    u + .body .schedule-text { color: #CBD5E1 !important; }
+  </style>
+  <!--<![endif]-->
+</head>
+<body class="body" style="margin: 0; padding: 0; background-color: #F8FAFC;">
+  <!--[if mso]>
+  <style type="text/css">
+    body, table, td {font-family: Arial, Helvetica, sans-serif !important;}
+  </style>
+  <![endif]-->
+  
+  <table width="100%" cellpadding="0" cellspacing="0" class="email-bg" style="background-color: #F8FAFC; padding: 40px 20px;">
+    <tr>
+      <td align="center">
+        <table width="600" cellpadding="0" cellspacing="0" class="email-card" style="background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 24px rgba(10,22,40,0.08); max-width: 100%;">
+          
+          <!-- Gold Accent Bar -->
+          <tr>
+            <td style="height: 5px; background: linear-gradient(90deg, #D4A843, #FFD700, #D4A843); font-size: 0; line-height: 0;">&nbsp;</td>
+          </tr>
+
+          <!-- Header — Deep Navy (same in both modes) -->
+          <tr>
+            <td style="background: linear-gradient(135deg, #0A1628 0%, #0F2440 100%); padding: 36px 40px 28px; text-align: center;">
+              <img src="https://res.cloudinary.com/dvrzwuxaw/image/upload/v1775297798/white_logo_tnnti3.png" alt="UTech Marketing Seminar" style="display: block; margin: 0 auto 18px; max-height: 90px; max-width: 220px; height: auto; width: auto;" />
+              <h1 style="color: #ffffff; font-size: 21px; margin: 0 0 6px; letter-spacing: 0.5px; font-weight: 700;">44th UTech Marketing Seminar 2026</h1>
+              <p style="color: #D4A843; font-size: 13px; margin: 0; font-style: italic; letter-spacing: 0.3px;">
+                "Your Brand, Your Balance: Thriving as a Marketing Graduate"
+              </p>
+            </td>
+          </tr>
+
+          <!-- Welcome -->
+          <tr>
+            <td style="padding: 30px 40px 20px;">
+              <p class="text-body" style="font-size: 16px; color: #334155; margin: 0 0 8px;">Dear <strong class="text-dark" style="color: #0F172A;">{{to_name}}</strong>,</p>
+              <p class="text-muted" style="font-size: 14px; color: #64748B; line-height: 1.6; margin: 0;">
+                You are cordially invited to the <strong class="text-dark" style="color: #0F172A;">44th UTech Marketing Seminar</strong>. 
+                Below you will find your personalized event pass with all the details you need.
+              </p>
+            </td>
+          </tr>
+
+          <!-- Event Details -->
+          <tr>
+            <td style="padding: 0 40px 20px;">
+              <table width="100%" cellpadding="0" cellspacing="0" class="details-box" style="background-color: #F8FAFC; border-radius: 8px; border: 1px solid #E2E8F0;">
+                <tr>
+                  <td style="padding: 20px;">
+                    <table width="100%" cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td width="50%" style="padding: 8px 0; vertical-align: top;">
+                          <span class="text-light-muted" style="font-size: 11px; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.05em;">Date</span><br>
+                          <strong class="text-dark" style="font-size: 14px; color: #0F172A;">{{event_date}}</strong>
+                        </td>
+                        <td width="50%" style="padding: 8px 0; vertical-align: top;">
+                          <span class="text-light-muted" style="font-size: 11px; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.05em;">Time</span><br>
+                          <strong class="text-dark" style="font-size: 14px; color: #0F172A;">{{event_time}}</strong>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td width="50%" style="padding: 8px 0; vertical-align: top;">
+                          <span class="text-light-muted" style="font-size: 11px; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.05em;">Venue</span><br>
+                          <strong class="text-dark" style="font-size: 14px; color: #0F172A;">{{venue_name}}</strong><br>
+                          <span class="text-muted" style="font-size: 12px; color: #64748B;">{{venue_room}}</span><br>
+                          <a href="{{venue_map_url}}" target="_blank" style="font-size: 11px; color: #3B82F6; text-decoration: none; display: inline-block; margin-top: 4px;">View on Google Maps</a>
+                        </td>
+                        <td width="50%" style="padding: 8px 0; vertical-align: top;">
+                          <span class="text-light-muted" style="font-size: 11px; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.05em;">Role</span><br>
+                          <strong style="font-size: 14px; color: #D4A843;">{{attendee_role}}</strong>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td width="50%" style="padding: 8px 0; vertical-align: top;">
+                          <span class="text-light-muted" style="font-size: 11px; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.05em;">Table Number</span><br>
+                          <strong class="text-dark" style="font-size: 18px; color: #0A1628;">Table {{table_number}}</strong>
+                        </td>
+                        <td width="50%" style="padding: 8px 0; vertical-align: top;">
+                          <span class="text-light-muted" style="font-size: 11px; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.05em;">Dietary</span><br>
+                          <strong class="text-dark" style="font-size: 14px; color: #0F172A;">{{dietary}}</strong>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- QR Code -->
+          <tr>
+            <td style="padding: 0 40px 20px; text-align: center;">
+              <p class="text-muted" style="font-size: 14px; color: #64748B; margin: 0 0 12px;">
+                Present this QR code at the registration desk for check-in:
+              </p>
+              <div class="qr-wrapper" style="display: inline-block; background: #ffffff; padding: 16px; border-radius: 12px; border: 2px solid #E2E8F0;">
+                <img src="{{qr_code_url}}" alt="Your QR Code" width="180" height="180" style="display: block;" />
+              </div>
+              <p class="text-light-muted" style="font-size: 12px; color: #94A3B8; margin: 12px 0 0;">
+                ID: {{attendee_id}}
+              </p>
+            </td>
+          </tr>
+
+          <!-- View Event Pass Button — Gold -->
+          <tr>
+            <td style="padding: 0 40px 30px; text-align: center;">
+              <a href="{{event_pass_url}}" style="display: inline-block; background: linear-gradient(135deg, #D4A843, #FFD700); color: #0A1628; padding: 14px 32px; border-radius: 8px; text-decoration: none; font-size: 14px; font-weight: 700; margin-bottom: 16px;">
+                View Your Full Event Pass
+              </a>
+              <br>
+              <a href="{{base_url}}" style="color: #D4A843; text-decoration: none; font-size: 13px; font-weight: 600;">
+                Visit Event Website to View Speakers
+              </a>
+            </td>
+          </tr>
+
+          <!-- Schedule Preview -->
+          <tr>
+            <td style="padding: 0 40px 30px;">
+              <h3 class="text-dark" style="font-size: 15px; color: #0F172A; margin: 0 0 12px; border-bottom: 2px solid #D4A843; padding-bottom: 8px;">Schedule Highlights</h3>
+              <table width="100%" cellpadding="0" cellspacing="0" style="font-size: 13px;">
+                <tr><td class="schedule-time" style="padding: 6px 0; color: #0A1628;"><strong>9:00 AM</strong></td><td class="schedule-text" style="padding: 6px 0; color: #475569;">Opening Prayer</td></tr>
+                <tr><td class="schedule-time" style="padding: 6px 0; color: #0A1628;"><strong>9:45 AM</strong></td><td class="schedule-text" style="padding: 6px 0; color: #475569;">Keynote Address</td></tr>
+                <tr><td class="schedule-time" style="padding: 6px 0; color: #0A1628;"><strong>12:00 PM</strong></td><td class="schedule-text" style="padding: 6px 0; color: #475569;">Lunch</td></tr>
+                <tr><td class="schedule-time" style="padding: 6px 0; color: #0A1628;"><strong>1:50 PM</strong></td><td class="schedule-text" style="padding: 6px 0; color: #475569;">Panel Discussion and Q&amp;A</td></tr>
+                <tr><td class="schedule-time" style="padding: 6px 0; color: #0A1628;"><strong>2:40 PM</strong></td><td class="schedule-text" style="padding: 6px 0; color: #475569;">Award Ceremony</td></tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Footer — Navy (unchanged in dark mode - already dark) -->
+          <tr>
+            <td style="background: linear-gradient(135deg, #0A1628, #0F2440); padding: 20px 40px; text-align: center;">
+              <p style="font-size: 12px; color: #94A3B8; margin: 0;">
+                University of Technology, Jamaica<br>
+                44th Marketing Seminar &bull; April 8, 2026
+              </p>
+              <div style="width: 40px; height: 2px; background: #D4A843; margin: 10px auto 0;"></div>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
