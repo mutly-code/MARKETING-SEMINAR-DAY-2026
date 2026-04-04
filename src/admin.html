@@ -104,16 +104,7 @@
       </div>
     </section>
 
-    <!-- Speaker Management -->
-    <section class="section animate-in animate-in-delay-2" id="speaker-management-section">
-      <h2 class="section-title"><i class="ph ph-microphone-stage"></i> Speaker Management</h2>
-      <div class="card-static">
-        <p class="text-muted" style="margin-bottom: var(--space-md);">Upload profile photos for speakers. These will instantly deploy to the live landing page.</p>
-        <div id="speakers-admin-list" style="display: grid; gap: var(--space-md); grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
-          <p class="text-muted text-center" style="grid-column: 1 / -1; padding: 2rem;">Loading speakers...</p>
-        </div>
-      </div>
-    </section>
+
 
     <!-- Email Management -->
     <section class="section animate-in animate-in-delay-2">
@@ -206,41 +197,7 @@
       </div>
     </section>
 
-    <!-- Gallery Management -->
-    <section class="section animate-in animate-in-delay-2" id="gallery-management-section">
-      <h2 class="section-title"><i class="ph ph-images"></i> Gallery Management</h2>
-      <div class="card-static">
-        <p class="text-muted" style="margin-bottom: var(--space-md);">Upload photos to the public gallery. Images are automatically resized and cropped to fit perfectly.</p>
 
-        <!-- Upload Form -->
-        <div style="display: flex; gap: var(--space-md); flex-wrap: wrap; align-items: flex-end; margin-bottom: var(--space-lg); padding-bottom: var(--space-lg); border-bottom: 1px solid var(--gray-200);">
-          <div style="flex: 1; min-width: 200px;">
-            <label style="font-size: 0.82rem; font-weight: 600; color: var(--gray-700); display: block; margin-bottom: var(--space-xs);">Select Photo</label>
-            <input type="file" id="gallery-file-input" accept="image/*" class="search-input" style="padding: 0.5rem; padding-left: 1rem;" />
-          </div>
-          <div style="min-width: 150px;">
-            <label style="font-size: 0.82rem; font-weight: 600; color: var(--gray-700); display: block; margin-bottom: var(--space-xs);">Caption (optional)</label>
-            <input type="text" id="gallery-caption-input" class="search-input" placeholder="e.g. Keynote address" style="padding-left: 1rem;" />
-          </div>
-          <button class="btn btn-gold" id="gallery-upload-btn" onclick="uploadGalleryImage()">
-            <i class="ph ph-upload-simple"></i> Upload
-          </button>
-        </div>
-
-        <!-- Upload progress -->
-        <div id="gallery-upload-progress" style="display: none; margin-bottom: var(--space-lg);">
-          <div class="progress-bar-bg">
-            <div class="progress-bar-fill" style="width: 100%; animation: shimmer 1.5s infinite;"></div>
-          </div>
-          <p style="font-size: 0.85rem; color: var(--gray-500); margin-top: var(--space-sm);">Uploading and processing image...</p>
-        </div>
-
-        <!-- Gallery Grid -->
-        <div id="admin-gallery-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: var(--space-md);">
-          <p class="text-muted text-center" style="grid-column: 1 / -1; padding: 2rem;">Loading gallery...</p>
-        </div>
-      </div>
-    </section>
   </main>
 
   <!-- Toast Container -->

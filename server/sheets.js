@@ -32,13 +32,26 @@ let sheetsClient = null;
 async function getClient() {
   if (sheetsClient) return sheetsClient;
 
-  if (!existsSync(CREDENTIALS_PATH)) {
+  let credentials;
+
+  // 1. Try to load from environment variable (Recommended for Production/Render)
+  if (process.env.GOOGLE_SERVICE_ACCOUNT_JSON) {
+    try {
+      credentials = JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_JSON);
+    } catch (parseError) {
+      throw new Error('Invalid JSON format in GOOGLE_SERVICE_ACCOUNT_JSON environment variable.');
+    }
+  } 
+  // 2. Fall back to local credentials.json file
+  else if (existsSync(CREDENTIALS_PATH)) {
+    credentials = JSON.parse(readFileSync(CREDENTIALS_PATH, 'utf-8'));
+  } 
+  // 3. Fail if neither is available
+  else {
     throw new Error(
-      'credentials.json not found. Please follow the setup guide at /setup.html'
+      'Google Sheets credentials not found. Set GOOGLE_SERVICE_ACCOUNT_JSON or provide credentials.json'
     );
   }
-
-  const credentials = JSON.parse(readFileSync(CREDENTIALS_PATH, 'utf-8'));
 
   const auth = new google.auth.GoogleAuth({
     credentials,
