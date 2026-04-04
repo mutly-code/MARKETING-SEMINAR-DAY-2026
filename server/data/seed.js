@@ -3,7 +3,7 @@ import { ensureSheet, addAttendeesBatch, clearAttendees } from '../sheets.js';
 
 dotenv.config();
 
-const BASE_URL = process.env.BASE_URL || 'http://localhost:5173';
+const BASE_URL = process.env.BASE_URL || 'https://marketing-seminar-day-2026.onrender.com';
 
 // ----- Jamaican-style name data for realistic attendees -----
 const firstNames = [
@@ -46,10 +46,10 @@ const dietaryOptions = [
 ];
 
 const facilitatorNames = [
-  'Dr. Karen Thompson',
-  'Prof. Michael Edwards',
-  'Dr. Sandra Clarke',
-  'Prof. Richard Campbell',
+  'Ms. Suzette Townsend',
+  'Mr. Nigel Mcfarlane',
+  'Ms. Kris-Ann Taylor',
+  'Mr. MichaelLee',
 ];
 
 const speakerNames = [

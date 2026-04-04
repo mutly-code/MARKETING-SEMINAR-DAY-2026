@@ -41,11 +41,11 @@ async function getClient() {
     } catch (parseError) {
       throw new Error('Invalid JSON format in GOOGLE_SERVICE_ACCOUNT_JSON environment variable.');
     }
-  } 
+  }
   // 2. Fall back to local credentials.json file
   else if (existsSync(CREDENTIALS_PATH)) {
     credentials = JSON.parse(readFileSync(CREDENTIALS_PATH, 'utf-8'));
-  } 
+  }
   // 3. Fail if neither is available
   else {
     throw new Error(

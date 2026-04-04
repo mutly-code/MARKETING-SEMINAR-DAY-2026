@@ -15,6 +15,51 @@ let scannerActive = false;
 let pollingInterval = null;
 const POLL_INTERVAL_MS = 30000; // 30 seconds
 
+// ----- EmailJS Configuration -----
+const EMAILJS_SERVICE_ID = 'service_go8tysc';
+const EMAILJS_TEMPLATE_ID = 'template_39coob5';
+const BASE_URL = 'https://marketing-seminar-day-2026.onrender.com';
+
+/**
+ * Send email via EmailJS (client-side)
+ */
+async function sendEmailViaEmailJS(attendee) {
+  // Generate QR code URL using public API
+  const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(attendee.id)}`;
+  const eventPassUrl = `${BASE_URL}/?id=${attendee.id}`;
+  const scheduleText = [
+    '8:30 AM — Registration & Check-in',
+    '9:00 AM — Opening Ceremony',
+    '9:30 AM — Keynote Address',
+    '10:30 AM — Coffee Break',
+    '12:00 PM — Lunch & Networking',
+    '2:00 PM — Panel Discussion',
+    '3:00 PM — Closing Remarks & Awards',
+  ].join('\n');
+
+  const templateParams = {
+    to_email: attendee.email,
+    to_name: attendee.name,
+    attendee_name: attendee.name,
+    attendee_id: attendee.id,
+    attendee_role: attendee.role,
+    table_number: attendee.tableNumber || 'TBA',
+    dietary: attendee.dietary || 'None',
+    qr_code_url: qrCodeUrl,
+    event_pass_url: eventPassUrl,
+    base_url: BASE_URL,
+    event_date: 'Wednesday, April 8, 2026',
+    event_time: '9:00 AM – 3:00 PM',
+    venue_name: 'Hope Fellowship Church',
+    venue_room: 'Hope Fellowship Auditorium',
+    venue_map_url: 'https://maps.app.goo.gl/t4LmsQx8TP5ZSTvn6',
+    schedule_text: scheduleText,
+  };
+
+  // eslint-disable-next-line no-undef
+  return emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams);
+}
+
 // ----- Data Loading -----
 
 async function loadStats() {
@@ -353,21 +398,21 @@ window.sendTestEmail = async function () {
   btn.innerHTML = '<i class="ph ph-circle-notch ph-spin"></i> Sending...';
 
   try {
-    const res = await fetch('/api/email/test', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email }),
-    });
+    // Create test attendee data
+    const testAttendee = {
+      id: 'TEST-' + Date.now(),
+      name: 'Test User',
+      email: email,
+      role: 'Guest',
+      tableNumber: 'VIP',
+      dietary: 'None',
+    };
 
-    const data = await res.json();
-
-    if (data.success) {
-      showToast(`Test email sent to ${email}`, 'success');
-    } else {
-      showToast(`Failed: ${data.error}`, 'error');
-    }
+    await sendEmailViaEmailJS(testAttendee);
+    showToast(`Test email sent to ${email}`, 'success');
   } catch (error) {
-    showToast(`Error: ${error.message}`, 'error');
+    console.error('EmailJS error:', error);
+    showToast(`Failed: ${error.text || error.message || 'Unknown error'}`, 'error');
   } finally {
     btn.disabled = false;
     btn.innerHTML = '<i class="ph ph-paper-plane-tilt"></i> Send Test';
@@ -411,8 +456,15 @@ window.closeEmailPreview = function () {
 };
 
 window.sendAllEmails = async function () {
+  const withEmail = allAttendees.filter((a) => a.email && a.email.includes('@'));
+
+  if (withEmail.length === 0) {
+    showToast('No attendees with valid email addresses', 'warning');
+    return;
+  }
+
   const confirmed = confirm(
-    'This will send personalized emails with QR codes to ALL attendees.\n\nAre you sure you want to proceed?'
+    `This will send personalized emails to ${withEmail.length} attendees.\n\nAre you sure you want to proceed?`
   );
 
   if (!confirmed) return;
@@ -426,56 +478,71 @@ window.sendAllEmails = async function () {
   btn.innerHTML = '<i class="ph ph-circle-notch ph-spin"></i> Sending...';
   progressDiv.style.display = 'block';
   progressFill.style.width = '0%';
-  progressText.textContent = 'Starting email send...';
 
-  try {
-    const res = await fetch('/api/email/send-all', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-    });
+  let sent = 0;
+  let failed = 0;
+  const errors = [];
 
-    const data = await res.json();
+  for (let i = 0; i < withEmail.length; i++) {
+    const attendee = withEmail[i];
+    progressText.textContent = `Sending ${i + 1}/${withEmail.length}: ${attendee.name}...`;
+    progressFill.style.width = `${((i + 1) / withEmail.length) * 100}%`;
 
-    if (data.success) {
-      progressFill.style.width = '100%';
-      progressText.textContent = `Sending ${data.total} emails in background. Check server logs for progress.`;
-      showToast(`Sending ${data.total} emails! Check server console for progress.`, 'success');
-    } else {
-      progressText.textContent = `Error: ${data.error}`;
-      showToast(`Failed: ${data.error}`, 'error');
+    try {
+      await sendEmailViaEmailJS(attendee);
+      sent++;
+    } catch (error) {
+      failed++;
+      errors.push({ name: attendee.name, error: error.text || error.message });
+      console.error(`Failed to send to ${attendee.name}:`, error);
     }
-  } catch (error) {
-    progressText.textContent = `Error: ${error.message}`;
-    showToast(`Error: ${error.message}`, 'error');
-  } finally {
-    btn.disabled = false;
-    btn.innerHTML = '<i class="ph ph-paper-plane-tilt"></i> Send All Emails';
+
+    // Small delay to avoid rate limiting (EmailJS has limits)
+    if (i < withEmail.length - 1) {
+      await new Promise((resolve) => setTimeout(resolve, 500));
+    }
   }
+
+  progressFill.style.width = '100%';
+  progressText.textContent = `Complete! ${sent} sent, ${failed} failed.`;
+
+  if (failed > 0) {
+    showToast(`Sent ${sent} emails. ${failed} failed.`, 'warning');
+    console.log('Failed emails:', errors);
+  } else {
+    showToast(`All ${sent} emails sent successfully!`, 'success');
+  }
+
+  btn.disabled = false;
+  btn.innerHTML = '<i class="ph ph-paper-plane-tilt"></i> Send All Emails';
 };
 
 window.sendEmailToAttendee = async function (id) {
   const btn = document.querySelector(`#email-btn-${id}`);
+  const attendee = allAttendees.find((a) => a.id === id);
+
+  if (!attendee) {
+    showToast('Attendee not found', 'error');
+    return;
+  }
+
+  if (!attendee.email) {
+    showToast('Attendee has no email address', 'warning');
+    return;
+  }
+
   if (btn) {
     btn.disabled = true;
     btn.innerHTML = '<i class="ph ph-circle-notch ph-spin"></i>';
   }
 
   try {
-    const res = await fetch(`/api/email/send/${id}`, { method: 'POST' });
-    const data = await res.json();
-
-    if (data.success) {
-      showToast(`Email sent to ${data.data.to}`, 'success');
-      if (btn) btn.innerHTML = '<i class="ph ph-check"></i>';
-    } else {
-      showToast(`Failed: ${data.error}`, 'error');
-      if (btn) {
-        btn.disabled = false;
-        btn.innerHTML = '<i class="ph ph-envelope-simple"></i>';
-      }
-    }
+    await sendEmailViaEmailJS(attendee);
+    showToast(`Email sent to ${attendee.email}`, 'success');
+    if (btn) btn.innerHTML = '<i class="ph ph-check"></i>';
   } catch (error) {
-    showToast(`Error: ${error.message}`, 'error');
+    console.error('EmailJS error:', error);
+    showToast(`Failed: ${error.text || error.message || 'Unknown error'}`, 'error');
     if (btn) {
       btn.disabled = false;
       btn.innerHTML = '<i class="ph ph-envelope-simple"></i>';
@@ -530,8 +597,15 @@ window.sendSelectedEmails = async function () {
     return;
   }
 
+  const selectedAttendees = allAttendees.filter(a => selectedIds.includes(a.id) && a.email);
+
+  if (selectedAttendees.length === 0) {
+    showToast('No selected attendees have email addresses', 'warning');
+    return;
+  }
+
   const confirmed = confirm(
-    `Send personalized emails to ${selectedIds.length} selected attendee(s)?`
+    `Send personalized emails to ${selectedAttendees.length} selected attendee(s)?`
   );
   if (!confirmed) return;
 
@@ -544,28 +618,38 @@ window.sendSelectedEmails = async function () {
   btn.innerHTML = '<i class="ph ph-circle-notch ph-spin"></i> Sending...';
   progressDiv.style.display = 'block';
   progressFill.style.width = '0%';
-  progressText.textContent = `Sending to ${selectedIds.length} attendees...`;
 
   let sent = 0;
   let failed = 0;
 
-  for (const id of selectedIds) {
+  for (let i = 0; i < selectedAttendees.length; i++) {
+    const attendee = selectedAttendees[i];
+    progressText.textContent = `Sending ${i + 1}/${selectedAttendees.length}: ${attendee.name}...`;
+
     try {
-      const res = await fetch(`/api/email/send/${id}`, { method: 'POST' });
-      const data = await res.json();
-      if (data.success) {
-        sent++;
-      } else {
-        failed++;
-      }
-    } catch {
+      await sendEmailViaEmailJS(attendee);
+      sent++;
+    } catch (error) {
       failed++;
+      console.error(`Failed to send to ${attendee.name}:`, error);
     }
 
-    const progress = Math.round(((sent + failed) / selectedIds.length) * 100);
+    const progress = Math.round(((i + 1) / selectedAttendees.length) * 100);
     progressFill.style.width = `${progress}%`;
-    progressText.textContent = `Sent ${sent} of ${selectedIds.length}${failed > 0 ? ` (${failed} failed)` : ''}...`;
+
+    // Small delay to avoid rate limiting
+    if (i < selectedAttendees.length - 1) {
+      await new Promise((resolve) => setTimeout(resolve, 500));
+    }
   }
+
+  progressFill.style.width = '100%';
+  progressText.textContent = `Done! ${sent} sent, ${failed} failed.`;
+  showToast(`Emails sent: ${sent} successful, ${failed} failed`, sent > 0 ? 'success' : 'error');
+
+  btn.disabled = false;
+  btn.innerHTML = `<i class="ph ph-paper-plane-tilt"></i> Send to Selected (<span id="selected-count">${selectedIds.length}</span>)`;
+};
 
   progressFill.style.width = '100%';
   progressText.textContent = `Done! ${sent} sent, ${failed} failed.`;
@@ -776,4 +860,3 @@ window.deleteGalleryImage = async function (id) {
     showToast(`Delete error: ${error.message}`, 'error');
   }
 };
-

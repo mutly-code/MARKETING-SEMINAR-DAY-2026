@@ -14,7 +14,7 @@ const LOGO_URL = 'https://res.cloudinary.com/dvrzwuxaw/image/upload/v1775297798/
 
 const EMAIL_USER = process.env.EMAIL_USER;
 const EMAIL_APP_PASSWORD = process.env.EMAIL_APP_PASSWORD;
-const BASE_URL = process.env.BASE_URL || 'http://localhost:5173';
+const BASE_URL = process.env.BASE_URL || 'https://marketing-seminar-day-2026.onrender.com';
 
 /**
  * Create email transporter (Gmail SMTP)
@@ -42,8 +42,7 @@ function getTransporter() {
 export function buildEmailHtml(attendee) {
   const attendeeUrl = `${BASE_URL}/?id=${attendee.id}`;
 
-  return `
-<!DOCTYPE html>
+  return `<!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8">
@@ -104,7 +103,7 @@ export function buildEmailHtml(attendee) {
                           <span style="font-size: 11px; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.05em;">Venue</span><br>
                           <strong style="font-size: 14px; color: #0F172A;">Hope Fellowship Church</strong><br>
                           <span style="font-size: 12px; color: #64748B;">Hope Fellowship Auditorium</span><br>
-                          <a href="https://maps.app.goo.gl/Gqo9DC7Uf7qChSMn7" target="_blank" style="font-size: 11px; color: #3B82F6; text-decoration: none; display: inline-block; margin-top: 4px;">View on Google Maps</a>
+                          <a href="https://maps.app.goo.gl/t4LmsQx8TP5ZSTvn6" target="_blank" style="font-size: 11px; color: #3B82F6; text-decoration: none; display: inline-block; margin-top: 4px;">View on Google Maps</a>
                         </td>
                         <td width="50%" style="padding: 8px 0;">
                           <span style="font-size: 11px; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.05em;">Role</span><br>
@@ -187,6 +186,7 @@ export function buildEmailHtml(attendee) {
   </table>
 </body>
 </html>`;
+}
 }
 
 /**

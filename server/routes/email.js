@@ -64,6 +64,18 @@ router.post('/test', async (req, res) => {
       return res.status(400).json({ success: false, error: 'Email address required' });
     }
 
+    // Check env vars first
+    if (!process.env.EMAIL_USER || !process.env.EMAIL_APP_PASSWORD) {
+      return res.status(500).json({
+        success: false,
+        error: 'Email not configured on server. Set EMAIL_USER and EMAIL_APP_PASSWORD environment variables.',
+        diagnosis: {
+          EMAIL_USER_SET: !!process.env.EMAIL_USER,
+          EMAIL_APP_PASSWORD_SET: !!process.env.EMAIL_APP_PASSWORD,
+        },
+      });
+    }
+
     const testAttendee = {
       id: 'ADMIN-TEST',
       name: 'Admin Test',
@@ -76,9 +88,55 @@ router.post('/test', async (req, res) => {
     const result = await sendEmail(testAttendee);
     res.json({ success: true, data: result, message: `Test email sent to ${email}` });
   } catch (error) {
-    console.error('Test email error:', error.message);
-    res.status(500).json({ success: false, error: error.message });
+    console.error('Test email error:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message,
+      code: error.code || null,
+      responseCode: error.responseCode || null,
+    });
   }
+});
+
+// GET /api/email/diagnose — Check email configuration
+router.get('/diagnose', async (req, res) => {
+  const EMAIL_USER = process.env.EMAIL_USER;
+  const EMAIL_APP_PASSWORD = process.env.EMAIL_APP_PASSWORD;
+
+  const diagnosis = {
+    EMAIL_USER_SET: !!EMAIL_USER,
+    EMAIL_USER_VALUE: EMAIL_USER ? `${EMAIL_USER.substring(0, 3)}***@${EMAIL_USER.split('@')[1] || '?'}` : null,
+    EMAIL_APP_PASSWORD_SET: !!EMAIL_APP_PASSWORD,
+    EMAIL_APP_PASSWORD_LENGTH: EMAIL_APP_PASSWORD ? EMAIL_APP_PASSWORD.length : 0,
+    BASE_URL: process.env.BASE_URL || '(not set)',
+  };
+
+  // Test SMTP connection
+  if (EMAIL_USER && EMAIL_APP_PASSWORD) {
+    try {
+      const nodemailer = await import('nodemailer');
+      const transporter = nodemailer.default.createTransport({
+        host: 'smtp.gmail.com',
+        port: 587,
+        secure: false,
+        family: 4,
+        auth: {
+          user: EMAIL_USER,
+          pass: EMAIL_APP_PASSWORD,
+        },
+      });
+
+      await transporter.verify();
+      diagnosis.SMTP_CONNECTION = 'SUCCESS';
+    } catch (error) {
+      diagnosis.SMTP_CONNECTION = 'FAILED';
+      diagnosis.SMTP_ERROR = error.message;
+    }
+  } else {
+    diagnosis.SMTP_CONNECTION = 'SKIPPED (missing credentials)';
+  }
+
+  res.json(diagnosis);
 });
 
 // GET /api/email/preview — Get a preview of the email template
