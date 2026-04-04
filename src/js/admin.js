@@ -651,14 +651,6 @@ window.sendSelectedEmails = async function () {
   btn.innerHTML = `<i class="ph ph-paper-plane-tilt"></i> Send to Selected (<span id="selected-count">${selectedIds.length}</span>)`;
 };
 
-  progressFill.style.width = '100%';
-  progressText.textContent = `Done! ${sent} sent, ${failed} failed.`;
-  showToast(`Emails sent: ${sent} successful, ${failed} failed`, sent > 0 ? 'success' : 'error');
-
-  btn.disabled = false;
-  btn.innerHTML = `<i class="ph ph-paper-plane-tilt"></i> Send to Selected (<span id="selected-count">${selectedIds.length}</span>)`;
-};
-
 // ----- Initialize -----
 
 document.addEventListener('DOMContentLoaded', async () => {
