@@ -16,6 +16,9 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+// Trust Render's reverse proxy (required for rate limiting behind a proxy)
+app.set('trust proxy', 1);
+
 // ===== Security Middleware =====
 
 // Helmet — sets secure HTTP headers (XSS, clickjacking, MIME sniffing, etc.)

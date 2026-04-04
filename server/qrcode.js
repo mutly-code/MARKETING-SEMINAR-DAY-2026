@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const BASE_URL = process.env.BASE_URL || 'http://localhost:5173';
+const BASE_URL = process.env.BASE_URL || 'https://marketing-seminar-day-2026.onrender.com';
 
 /**
  * Generate a QR code data URL for an attendee

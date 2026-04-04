@@ -25,7 +25,10 @@ function getTransporter() {
   }
 
   return nodemailer.createTransport({
-    service: 'gmail',
+    host: 'smtp.gmail.com',
+    port: 587,
+    secure: false,
+    family: 4, // Force IPv4 — Render free tier doesn't support IPv6
     auth: {
       user: EMAIL_USER,
       pass: EMAIL_APP_PASSWORD,
