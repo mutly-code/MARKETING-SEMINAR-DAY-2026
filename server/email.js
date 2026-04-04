@@ -9,8 +9,8 @@ dotenv.config();
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-// Logo is always available in src/assets/ (repo files persist on Render)
-const LOGO_PATH = join(__dirname, '..', 'src', 'assets', 'logo.png');
+// Cloudinary-hosted white logo for email templates
+const LOGO_URL = 'https://res.cloudinary.com/dvrzwuxaw/image/upload/v1775297798/white_logo_tnnti3.png';
 
 const EMAIL_USER = process.env.EMAIL_USER;
 const EMAIL_APP_PASSWORD = process.env.EMAIL_APP_PASSWORD;
@@ -60,7 +60,7 @@ export function buildEmailHtml(attendee) {
           <!-- Header — Deep Navy -->
           <tr>
             <td style="background: linear-gradient(135deg, #0A1628 0%, #0F2440 100%); padding: 36px 40px 28px; text-align: center;">
-              <img src="cid:logo" alt="UTech Marketing Seminar" style="display: block; margin: 0 auto 18px; max-height: 90px; max-width: 220px; height: auto; width: auto; filter: brightness(0) invert(1);" />
+              <img src="${LOGO_URL}" alt="UTech Marketing Seminar" style="display: block; margin: 0 auto 18px; max-height: 90px; max-width: 220px; height: auto; width: auto;" />
               <h1 style="color: #ffffff; font-size: 21px; margin: 0 0 6px; letter-spacing: 0.5px; font-weight: 700;">44th UTech Marketing Seminar 2026</h1>
               <p style="color: #D4A843; font-size: 13px; margin: 0; font-style: italic; letter-spacing: 0.3px;">
                 "Your Brand, Your Balance: Thriving as a Marketing Graduate"
@@ -199,13 +199,7 @@ export async function sendEmail(attendee) {
   const base64Data = qrDataUrl.replace(/^data:image\/png;base64,/, '');
   const qrBuffer = Buffer.from(base64Data, 'base64');
 
-  // Read logo file
-  let logoBuffer;
-  try {
-    logoBuffer = readFileSync(LOGO_PATH);
-  } catch {
-    logoBuffer = null;
-  }
+  // Read logo — no longer needed, using Cloudinary URL
 
   const attachments = [
     {
@@ -214,14 +208,6 @@ export async function sendEmail(attendee) {
       cid: 'qrcode',
     },
   ];
-
-  if (logoBuffer) {
-    attachments.push({
-      filename: 'logo.png',
-      content: logoBuffer,
-      cid: 'logo',
-    });
-  }
 
   const mailOptions = {
     from: `"44th UTech Marketing Seminar" <${EMAIL_USER}>`,
