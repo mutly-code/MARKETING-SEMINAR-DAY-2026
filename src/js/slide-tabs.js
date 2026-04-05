@@ -6,8 +6,10 @@
 export function initSlideTabs() {
   const tabs = [
     { label: 'Home',     target: '#landing-content' },
+    { label: 'Quotes',   target: '#quotes' },
     { label: 'Speakers', target: '#speakers' },
     { label: 'Schedule', target: '#schedule' },
+    { label: 'Team',     target: '#team' },
     { label: 'Gallery',  target: '#gallery' },
   ];
 
