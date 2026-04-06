@@ -193,8 +193,13 @@ function renderAttendee(attendee, qrDataUrl, isSilent = false) {
   }
 
   // Avatar & Name
-  document.getElementById('avatar-initials').textContent = getInitials(attendee.name);
-  document.getElementById('attendee-name').textContent = attendee.name;
+  const cleanName = String(attendee.name || '')
+    .replace(/\s*[|:,-]?\s*[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}\s*$/i, '')
+    .trim();
+  const displayName = cleanName || attendee.name || '';
+
+  document.getElementById('avatar-initials').textContent = getInitials(displayName);
+  document.getElementById('attendee-name').textContent = displayName;
 
   // Badges
   document.getElementById('role-badge').textContent = attendee.role;
@@ -207,7 +212,7 @@ function renderAttendee(attendee, qrDataUrl, isSilent = false) {
   // Info Cards
   document.getElementById('table-number').textContent = `Table ${attendee.tableNumber}`;
   document.getElementById('dietary-info').textContent = attendee.dietary;
-  document.getElementById('email-info').textContent = attendee.email;
+  document.getElementById('email-info').textContent = attendee.email || '--';
   document.getElementById('attendee-id').textContent = attendee.id;
 
   // QR Code
@@ -231,7 +236,7 @@ function renderAttendee(attendee, qrDataUrl, isSilent = false) {
   }
 
   // Update page title
-  document.title = `${attendee.name} — 44th UTech Marketing Seminar 2026`;
+  document.title = `${displayName} — 44th UTech Marketing Seminar 2026`;
 }
 
 function showError(message) {
