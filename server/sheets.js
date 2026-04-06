@@ -14,6 +14,7 @@ const SHEET_NAME = 'Attendees';
 // Column mapping (0-indexed)
 const COLUMNS = {
   ID: 0,
+  NAME: -1,
   FIRST_NAME: 1,
   LAST_NAME: 2,
   EMAIL: 3,
@@ -28,6 +29,70 @@ const COLUMNS = {
 };
 
 let sheetsClient = null;
+
+const HEADER_ALIASES = {
+  ID: ['id', 'attendee id'],
+  NAME: ['name', 'full name'],
+  FIRST_NAME: ['first name', 'firstname', 'first'],
+  LAST_NAME: ['last name', 'lastname', 'last', 'surname'],
+  EMAIL: ['email', 'email address'],
+  ROLE: ['role'],
+  TABLE_NUMBER: ['table number', 'table', 'table no', 'table #'],
+  DIETARY: ['dietary restrictions', 'dietary', 'dietary notes'],
+  CHECKIN_STATUS: ['check-in status', 'check in status', 'checkin status'],
+  CHECKIN_TIME: ['check-in time', 'check in time', 'checkin time'],
+  QR_CODE_URL: ['qr code url', 'qr url', 'qrcode url'],
+  EMAIL_SENT: ['email sent', 'sent'],
+  EMAIL_SENT_TIME: ['email sent time', 'sent time'],
+};
+
+function normalizeHeader(value) {
+  return String(value || '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim();
+}
+
+function resolveColumns(headers = []) {
+  const resolved = { ...COLUMNS };
+  const normalizedHeaders = headers.map((h) => normalizeHeader(h));
+
+  Object.entries(HEADER_ALIASES).forEach(([key, aliases]) => {
+    const matchIndex = normalizedHeaders.findIndex((header) =>
+      aliases.some((alias) => normalizeHeader(alias) === header)
+    );
+    if (matchIndex >= 0) {
+      resolved[key] = matchIndex;
+    }
+  });
+
+  return resolved;
+}
+
+async function getSheetRowsAndColumns(client) {
+  const response = await client.spreadsheets.values.get({
+    spreadsheetId: SHEET_ID,
+    range: `${SHEET_NAME}!A:Z`,
+  });
+
+  const allRows = response.data.values || [];
+  const headers = allRows[0] || [];
+  const rows = allRows.slice(1);
+  const columns = resolveColumns(headers);
+
+  return { rows, columns };
+}
+
+function toColumnLetter(index) {
+  let num = index + 1;
+  let letter = '';
+  while (num > 0) {
+    const rem = (num - 1) % 26;
+    letter = String.fromCharCode(65 + rem) + letter;
+    num = Math.floor((num - 1) / 26);
+  }
+  return letter;
+}
 
 /**
  * Get authenticated Google Sheets client
@@ -143,28 +208,25 @@ export async function ensureSheet() {
  */
 export async function getAttendees() {
   const client = await getClient();
-
-  const response = await client.spreadsheets.values.get({
-    spreadsheetId: SHEET_ID,
-    range: `${SHEET_NAME}!A2:L`,
-  });
-
-  const rows = response.data.values || [];
+  const { rows, columns } = await getSheetRowsAndColumns(client);
 
   return rows.map((row) => ({
-    id: row[COLUMNS.ID] || '',
-    firstName: row[COLUMNS.FIRST_NAME] || '',
-    lastName: row[COLUMNS.LAST_NAME] || '',
-    name: `${row[COLUMNS.FIRST_NAME] || ''} ${row[COLUMNS.LAST_NAME] || ''}`.trim(),
-    email: row[COLUMNS.EMAIL] || '',
-    role: row[COLUMNS.ROLE] || '',
-    tableNumber: row[COLUMNS.TABLE_NUMBER] || '',
-    dietary: row[COLUMNS.DIETARY] || 'None',
-    checkinStatus: row[COLUMNS.CHECKIN_STATUS] || 'Not Checked In',
-    checkinTime: row[COLUMNS.CHECKIN_TIME] || '',
-    qrCodeUrl: row[COLUMNS.QR_CODE_URL] || '',
-    emailSent: row[COLUMNS.EMAIL_SENT] === 'Yes',
-    emailSentTime: row[COLUMNS.EMAIL_SENT_TIME] || '',
+    id: row[columns.ID] || '',
+    firstName: row[columns.FIRST_NAME] || '',
+    lastName: row[columns.LAST_NAME] || '',
+    name:
+      `${row[columns.FIRST_NAME] || ''} ${row[columns.LAST_NAME] || ''}`.trim() ||
+      row[columns.NAME] ||
+      '',
+    email: row[columns.EMAIL] || '',
+    role: row[columns.ROLE] || '',
+    tableNumber: row[columns.TABLE_NUMBER] || '',
+    dietary: row[columns.DIETARY] || 'None',
+    checkinStatus: row[columns.CHECKIN_STATUS] || 'Not Checked In',
+    checkinTime: row[columns.CHECKIN_TIME] || '',
+    qrCodeUrl: row[columns.QR_CODE_URL] || '',
+    emailSent: row[columns.EMAIL_SENT] === 'Yes',
+    emailSentTime: row[columns.EMAIL_SENT_TIME] || '',
   }));
 }
 
@@ -191,20 +253,28 @@ async function findRowByAttendeeId(id) {
 export async function updateCheckIn(id, status = 'Checked In') {
   const client = await getClient();
   const rowNumber = await findRowByAttendeeId(id);
+  const { columns } = await getSheetRowsAndColumns(client);
 
   if (rowNumber < 0) {
     throw new Error(`Attendee ${id} not found`);
   }
 
   const now = new Date().toISOString();
+  const statusCol = toColumnLetter(columns.CHECKIN_STATUS);
+  const timeCol = toColumnLetter(columns.CHECKIN_TIME);
 
   await client.spreadsheets.values.update({
     spreadsheetId: SHEET_ID,
-    range: `${SHEET_NAME}!H${rowNumber}:I${rowNumber}`,
+    range: `${SHEET_NAME}!${statusCol}${rowNumber}`,
     valueInputOption: 'RAW',
-    requestBody: {
-      values: [[status, now]],
-    },
+    requestBody: { values: [[status]] },
+  });
+
+  await client.spreadsheets.values.update({
+    spreadsheetId: SHEET_ID,
+    range: `${SHEET_NAME}!${timeCol}${rowNumber}`,
+    valueInputOption: 'RAW',
+    requestBody: { values: [[now]] },
   });
 
   return { id, checkinStatus: status, checkinTime: now };
@@ -216,20 +286,28 @@ export async function updateCheckIn(id, status = 'Checked In') {
 export async function updateEmailSent(id) {
   const client = await getClient();
   const rowNumber = await findRowByAttendeeId(id);
+  const { columns } = await getSheetRowsAndColumns(client);
 
   if (rowNumber < 0) {
     throw new Error(`Attendee ${id} not found`);
   }
 
   const now = new Date().toISOString();
+  const sentCol = toColumnLetter(columns.EMAIL_SENT);
+  const sentTimeCol = toColumnLetter(columns.EMAIL_SENT_TIME);
 
   await client.spreadsheets.values.update({
     spreadsheetId: SHEET_ID,
-    range: `${SHEET_NAME}!K${rowNumber}:L${rowNumber}`,
+    range: `${SHEET_NAME}!${sentCol}${rowNumber}`,
     valueInputOption: 'RAW',
-    requestBody: {
-      values: [['Yes', now]],
-    },
+    requestBody: { values: [['Yes']] },
+  });
+
+  await client.spreadsheets.values.update({
+    spreadsheetId: SHEET_ID,
+    range: `${SHEET_NAME}!${sentTimeCol}${rowNumber}`,
+    valueInputOption: 'RAW',
+    requestBody: { values: [[now]] },
   });
 
   return { id, emailSent: true, emailSentTime: now };
