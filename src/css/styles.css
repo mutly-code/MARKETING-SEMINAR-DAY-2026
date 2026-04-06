@@ -453,7 +453,7 @@ img{max-width:100%;height:auto}
 
 /* ===== Quotes Carousel ===== */
 .quotes-carousel{max-width:720px;margin:0 auto;position:relative;text-align:center}
-.quotes-track{position:relative;min-height:200px}
+.quotes-track{position:relative;min-height:200px;transition:min-height 0.3s ease}
 .quote-card{position:absolute;top:0;left:0;right:0;opacity:0;transform:translateY(16px) scale(0.97);pointer-events:none;display:none;transition:opacity 0.4s ease}
 .quote-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--royal),var(--gold))}
 .quote-card.active{display:block;opacity:1;pointer-events:auto;position:relative}

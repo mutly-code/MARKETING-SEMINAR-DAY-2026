@@ -14,16 +14,16 @@ export function initQuotesCarousel() {
   let interval = null;
 
   function syncTrackHeight() {
-    let maxHeight = 0;
-    cards.forEach((card) => {
-      const wasActive = card.classList.contains('active');
-      if (!wasActive) card.classList.add('active');
-      const height = card.offsetHeight;
-      if (height > maxHeight) maxHeight = height;
-      if (!wasActive) card.classList.remove('active');
-    });
-    if (maxHeight > 0) {
-      track.style.minHeight = `${maxHeight}px`;
+    const activeCard = cards[currentIndex];
+    if (!activeCard) return;
+
+    const wasActive = activeCard.classList.contains('active');
+    if (!wasActive) activeCard.classList.add('active');
+    const height = activeCard.offsetHeight;
+    if (!wasActive) activeCard.classList.remove('active');
+
+    if (height > 0) {
+      track.style.minHeight = `${height}px`;
     }
   }
 
@@ -46,6 +46,7 @@ export function initQuotesCarousel() {
     // Add active to new
     cards[currentIndex].classList.add('active');
     dotsContainer.children[currentIndex].classList.add('active');
+    syncTrackHeight();
 
     // Reset the interval so the timer starts fresh after manual navigation
     startAutoPlay();
@@ -67,7 +68,7 @@ export function initQuotesCarousel() {
 
   function startAutoPlay() {
     if (interval) clearInterval(interval);
-    interval = setInterval(next, 5000);
+    interval = setInterval(next, 10000);
   }
 
   // Pause on hover
