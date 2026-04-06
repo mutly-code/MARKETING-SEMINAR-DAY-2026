@@ -29,10 +29,10 @@ async function sendEmailViaEmailJS(attendee) {
   const eventPassUrl = `${BASE_URL}/?id=${attendee.id}`;
   const scheduleText = [
     '8:15 AM — Registration',
-    '9:50 AM — Keynote Address',
-    '10:20 AM — Coffee Break',
-    '12:00 PM — Lunch',
-    '2:00 PM — Panel Discussion and Q&A',
+    '9:35 AM — Keynote Address',
+    '10:30 AM — Coffee Break',
+    '12:10 PM — Lunch',
+    '2:55 PM — Panel Discussion and Q&A',
     '3:55 PM — Closing',
   ].join('\n');
 

@@ -18,9 +18,6 @@
         <img src="./assets/logo-white.png" alt="UTech Marketing Seminar" class="logo-img">
         <span>UTech Marketing Seminar</span>
       </a>
-      <ul class="navbar-links">
-        <li><a href="/" class="active"><i class="ph ph-house"></i> <span class="link-text">Home</span></a></li>
-      </ul>
     </div>
   </nav>
 
@@ -80,6 +77,12 @@
       <section class="section" data-aos="fade-up" data-aos-delay="250" id="quotes">
         <h2 class="section-title justify-center"><i class="ph ph-quotes"></i> Quotes</h2>
         <div class="quotes-carousel" id="quotes-carousel">
+          <button id="quotes-prev" class="quotes-btn quotes-prev" aria-label="Previous quote" type="button">
+            <i class="ph ph-caret-left"></i>
+          </button>
+          <button id="quotes-next" class="quotes-btn quotes-next" aria-label="Next quote" type="button">
+            <i class="ph ph-caret-right"></i>
+          </button>
           <div class="quotes-track">
             <!-- Quote 1: Suzette Townsend -->
             <blockquote class="quote-card active">
@@ -148,86 +151,95 @@
         <div class="card-static" style="max-width: 800px; margin: 0 auto; border: none; box-shadow: none;">
           <div class="timeline">
             <div class="timeline-item">
-              <div class="timeline-time">8:30 AM – 8:55 AM</div>
+              <div class="timeline-time">8:15 AM</div>
               <div class="timeline-title">Registration</div>
             </div>
             <div class="timeline-item">
-              <div class="timeline-time">9:00 AM – 9:05 AM</div>
+              <div class="timeline-time">9:00 AM</div>
+              <div class="timeline-title">Master of Ceremony</div>
+              <div class="timeline-desc" style="font-size: 0.82rem; color: var(--gray-500); margin-top: 2px;">Tamoyah Cherrington & Richard Reynolds</div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-time">9:02 AM</div>
+              <div class="timeline-title">National Anthem</div>
+              <div class="timeline-desc" style="font-size: 0.82rem; color: var(--gray-500); margin-top: 2px;">Mahika Grant</div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-time">9:06 AM</div>
               <div class="timeline-title">Opening Prayer</div>
+              <div class="timeline-desc" style="font-size: 0.82rem; color: var(--gray-500); margin-top: 2px;">Tashinne Creary</div>
             </div>
             <div class="timeline-item">
-              <div class="timeline-time">9:05 AM – 9:15 AM</div>
+              <div class="timeline-time">9:10 AM</div>
               <div class="timeline-title">Welcome & Opening Remarks</div>
+              <div class="timeline-desc" style="font-size: 0.82rem; color: var(--gray-500); margin-top: 2px;">Shamike Gordon, CEO</div>
             </div>
             <div class="timeline-item">
-              <div class="timeline-time">9:15 AM – 9:25 AM</div>
-              <div class="timeline-title">Overview of the Marketing Seminar</div>
-            </div>
-            <div class="timeline-item">
-              <div class="timeline-time">9:25 AM – 9:40 AM</div>
+              <div class="timeline-time">9:15 AM</div>
               <div class="timeline-title">Faculty Greetings</div>
             </div>
             <div class="timeline-item">
-              <div class="timeline-time">9:40 AM – 9:45 AM</div>
+              <div class="timeline-time">9:30 AM</div>
               <div class="timeline-title">Introduction of the Keynote Speaker</div>
+              <div class="timeline-desc" style="font-size: 0.82rem; color: var(--gray-500); margin-top: 2px;">Diamond Samuels</div>
             </div>
             <div class="timeline-item active">
-              <div class="timeline-time">9:45 AM – 10:30 AM</div>
+              <div class="timeline-time">9:35 AM</div>
               <div class="timeline-title">Keynote Address — MP Damion Crawford</div>
-              <div class="timeline-desc" style="font-size: 0.82rem; color: var(--gray-500); margin-top: 2px;">Thriving Under Pressure: Mastering Work-Life Harmony</div>
             </div>
             <div class="timeline-item">
-              <div class="timeline-time">10:30 AM – 11:10 AM</div>
+              <div class="timeline-time">10:30 AM</div>
               <div class="timeline-title">Coffee Break</div>
             </div>
             <div class="timeline-item">
-              <div class="timeline-time">11:10 AM – 11:15 AM</div>
-              <div class="timeline-title">Introduction of Speaker #2</div>
+              <div class="timeline-time">11:10 AM</div>
+              <div class="timeline-title">Introduction of Brithney Clarke</div>
+              <div class="timeline-desc" style="font-size: 0.82rem; color: var(--gray-500); margin-top: 2px;">Trezagaye Garvey</div>
             </div>
             <div class="timeline-item active">
-              <div class="timeline-time">11:15 AM – 11:35 AM</div>
-              <div class="timeline-title">Brithney Clarke — Digicel Group</div>
-              <div class="timeline-desc" style="font-size: 0.82rem; color: var(--gray-500); margin-top: 2px;">Managing Digital Footprints and Ethical Online Behaviour</div>
+              <div class="timeline-time">11:20 AM</div>
+              <div class="timeline-title">Address — Managing Digital Footprints and Ethical Online Behaviour</div>
             </div>
             <div class="timeline-item">
-              <div class="timeline-time">11:35 AM – 11:40 AM</div>
-              <div class="timeline-title">Introduction of Speaker #3</div>
+              <div class="timeline-time">11:40 AM</div>
+              <div class="timeline-title">Introduction of Anadeen Nembhard</div>
+              <div class="timeline-desc" style="font-size: 0.82rem; color: var(--gray-500); margin-top: 2px;">Kimone Holness</div>
             </div>
             <div class="timeline-item active">
-              <div class="timeline-time">11:40 AM – 12:00 PM</div>
-              <div class="timeline-title">Anadeen Nembhard — Sygnus Group</div>
-              <div class="timeline-desc" style="font-size: 0.82rem; color: var(--gray-500); margin-top: 2px;">Your Degree is a Toolkit: Building a Career Beyond Marketing</div>
+              <div class="timeline-time">11:45 AM</div>
+              <div class="timeline-title">Address — Your Degree is a Toolkit: Building a Career Beyond Marketing</div>
             </div>
             <div class="timeline-item">
-              <div class="timeline-time">12:00 PM – 1:00 PM</div>
+              <div class="timeline-time">12:10 PM</div>
               <div class="timeline-title">Lunch</div>
             </div>
             <div class="timeline-item">
-              <div class="timeline-time">1:00 PM – 1:05 PM</div>
-              <div class="timeline-title">Introduction of Speaker #4</div>
+              <div class="timeline-time">1:10 PM</div>
+              <div class="timeline-title">Introduction of Dr Djavila Ho</div>
+              <div class="timeline-desc" style="font-size: 0.82rem; color: var(--gray-500); margin-top: 2px;">Jamar Smith</div>
             </div>
             <div class="timeline-item active">
-              <div class="timeline-time">1:05 PM – 1:25 PM</div>
-              <div class="timeline-title">Dr Djavila Ho — K.A.D. Morgan & Associates</div>
-              <div class="timeline-desc" style="font-size: 0.82rem; color: var(--gray-500); margin-top: 2px;">Your Mind Is Your Brand: Safeguarding Mental Health in High-Demand Careers</div>
+              <div class="timeline-time">1:15 PM</div>
+              <div class="timeline-title">Address — Your Mind Is Your Brand: Safeguarding Mental Health in High-Demand Careers</div>
             </div>
             <div class="timeline-item">
-              <div class="timeline-time">1:25 PM – 1:30 PM</div>
-              <div class="timeline-title">Introduction of Speaker #5</div>
+              <div class="timeline-time">1:35 PM</div>
+              <div class="timeline-title">Introduction of Bryan Henry</div>
+              <div class="timeline-desc" style="font-size: 0.82rem; color: var(--gray-500); margin-top: 2px;">Lashuani Spencer</div>
             </div>
             <div class="timeline-item active">
-              <div class="timeline-time">1:30 PM – 1:50 PM</div>
-              <div class="timeline-title">Bryan Henry — Barita Investments</div>
-              <div class="timeline-desc" style="font-size: 0.82rem; color: var(--gray-500); margin-top: 2px;">Financial Confidence: Managing Income, Debt, Growth as a Marketing Professional</div>
+              <div class="timeline-time">2:00 PM</div>
+              <div class="timeline-title">Address — Financial Confidence: Managing Income, Debt, Growth as a Marketing Professional</div>
             </div>
             <div class="timeline-item active">
-              <div class="timeline-time">1:50 PM – 2:40 PM</div>
+              <div class="timeline-time">2:55 PM</div>
               <div class="timeline-title">Panel Discussion and Q&A</div>
-              <div class="timeline-desc" style="font-size: 0.82rem; color: var(--gray-500); margin-top: 2px;">Passion vs Paycheck: What Should Drive a Marketing Career — Glenessa Martin, Wyomi Hopkins, Kajay Rowe, Carlyle Grant, Matthew Blake</div>
+              <div class="timeline-desc" style="font-size: 0.82rem; color: var(--gray-500); margin-top: 2px;">Moderator — Dontae Francis</div>
             </div>
             <div class="timeline-item">
-              <div class="timeline-time">2:55 PM – 3:55 PM</div>
+              <div class="timeline-time">3:55 PM</div>
               <div class="timeline-title">Closing</div>
+              <div class="timeline-desc" style="font-size: 0.82rem; color: var(--gray-500); margin-top: 2px;">Shamike Gordon, CEO</div>
             </div>
           </div>
         </div>
@@ -403,102 +415,97 @@
               <li class="schedule-item">
                 <span class="schedule-time">9:00 AM</span>
                 <span class="schedule-dot"></span>
-                <div><div class="schedule-title">Master of Ceremony</div><div class="schedule-desc">National Anthem & Pledge, Musical Entertainment</div></div>
+                <div><div class="schedule-title">Master of Ceremony</div><div class="schedule-desc">Tamoyah Cherrington & Richard Reynolds</div></div>
               </li>
               <li class="schedule-item">
                 <span class="schedule-time">9:02 AM</span>
                 <span class="schedule-dot"></span>
-                <div><div class="schedule-title">Welcome</div><div class="schedule-desc">Richard Reynolds</div></div>
+                <div><div class="schedule-title">National Anthem</div><div class="schedule-desc">Mahika Grant</div></div>
               </li>
               <li class="schedule-item">
                 <span class="schedule-time">9:06 AM</span>
                 <span class="schedule-dot"></span>
-                <div><div class="schedule-title">Opening Prayer</div></div>
+                <div><div class="schedule-title">Opening Prayer</div><div class="schedule-desc">Tashinne Creary</div></div>
               </li>
               <li class="schedule-item">
                 <span class="schedule-time">9:10 AM</span>
                 <span class="schedule-dot"></span>
-                <div><div class="schedule-title">Seminar Overview</div><div class="schedule-desc">Kristina Clarke, Steering Committee Chair</div></div>
+                <div><div class="schedule-title">Welcome & Opening Remarks</div><div class="schedule-desc">Shamike Gordon, CEO</div></div>
               </li>
               <li class="schedule-item">
                 <span class="schedule-time">9:15 AM</span>
                 <span class="schedule-dot"></span>
-                <div><div class="schedule-title">Greetings</div><div class="schedule-desc">Dr Olubusola Akinladejo, Acting Dean, CBM</div></div>
+                <div><div class="schedule-title">Faculty Greetings</div></div>
               </li>
               <li class="schedule-item">
                 <span class="schedule-time">9:30 AM</span>
                 <span class="schedule-dot"></span>
-                <div><div class="schedule-title">Faculty Greetings</div><div class="schedule-desc">Dionne Edwards-Burris</div></div>
+                <div><div class="schedule-title">Introduction of the Keynote Speaker</div><div class="schedule-desc">Diamond Samuels</div></div>
               </li>
               <li class="schedule-item">
                 <span class="schedule-time">9:35 AM</span>
                 <span class="schedule-dot"></span>
-                <div><div class="schedule-title">Introduction of the Keynote Speaker</div><div class="schedule-desc">Dionne Edwards-Burris</div></div>
+                <div><div class="schedule-title">Keynote Address — MP Damion Crawford</div></div>
               </li>
               <li class="schedule-item">
-                <span class="schedule-time">9:50 AM</span>
-                <span class="schedule-dot"></span>
-                <div><div class="schedule-title">Keynote Address: MP Damion Crawford</div><div class="schedule-desc">Thriving Under Pressure: Mastering Work-Life Harmony</div></div>
-              </li>
-              <li class="schedule-item">
-                <span class="schedule-time">10:20 AM</span>
+                <span class="schedule-time">10:30 AM</span>
                 <span class="schedule-dot break"></span>
                 <div><div class="schedule-title">Coffee Break</div></div>
               </li>
               <li class="schedule-item">
-                <span class="schedule-time">10:50 AM</span>
+                <span class="schedule-time">11:10 AM</span>
                 <span class="schedule-dot"></span>
-                <div><div class="schedule-title">Introduction of Brithney Clarke</div><div class="schedule-desc">Triceyagaye Garvey</div></div>
+                <div><div class="schedule-title">Introduction of Brithney Clarke</div><div class="schedule-desc">Trezagaye Garvey</div></div>
               </li>
               <li class="schedule-item">
-                <span class="schedule-time">11:00 AM</span>
+                <span class="schedule-time">11:20 AM</span>
                 <span class="schedule-dot"></span>
-                <div><div class="schedule-title">Brithney Clarke — Digicel Group</div><div class="schedule-desc">Managing Digital Footprints and Ethical Online Behaviour</div></div>
-              </li>
-              <li class="schedule-item">
-                <span class="schedule-time">11:30 AM</span>
-                <span class="schedule-dot"></span>
-                <div><div class="schedule-title">Introduction of Anadeen Nembhard</div></div>
+                <div><div class="schedule-title">Address — Managing Digital Footprints and Ethical Online Behaviour</div></div>
               </li>
               <li class="schedule-item">
                 <span class="schedule-time">11:40 AM</span>
                 <span class="schedule-dot"></span>
-                <div><div class="schedule-title">Anadeen Nembhard — Sygnus Group</div><div class="schedule-desc">Your Degree is a Toolkit: Building a Career Beyond Marketing</div></div>
+                <div><div class="schedule-title">Introduction of Anadeen Nembhard</div><div class="schedule-desc">Kimone Holness</div></div>
               </li>
               <li class="schedule-item">
-                <span class="schedule-time">12:00 PM</span>
+                <span class="schedule-time">11:45 AM</span>
+                <span class="schedule-dot"></span>
+                <div><div class="schedule-title">Address — Your Degree is a Toolkit: Building a Career Beyond Marketing</div></div>
+              </li>
+              <li class="schedule-item">
+                <span class="schedule-time">12:10 PM</span>
                 <span class="schedule-dot break"></span>
                 <div><div class="schedule-title">Lunch</div></div>
               </li>
               <li class="schedule-item">
-                <span class="schedule-time">12:45 PM</span>
+                <span class="schedule-time">1:10 PM</span>
                 <span class="schedule-dot"></span>
-                <div><div class="schedule-title">Introduction of Dr Djavila Ho</div></div>
-              </li>
-              <li class="schedule-item">
-                <span class="schedule-time">1:00 PM</span>
-                <span class="schedule-dot"></span>
-                <div><div class="schedule-title">Dr Djavila Ho — K.A.D. Morgan & Associates</div><div class="schedule-desc">Your Mind Is Your Brand: Safeguarding Mental Health in High-Demand Careers</div></div>
+                <div><div class="schedule-title">Introduction of Dr Djavila Ho</div><div class="schedule-desc">Jamar Smith</div></div>
               </li>
               <li class="schedule-item">
                 <span class="schedule-time">1:15 PM</span>
                 <span class="schedule-dot"></span>
-                <div><div class="schedule-title">Introduction of Bryan Henry</div></div>
+                <div><div class="schedule-title">Address — Your Mind Is Your Brand: Safeguarding Mental Health in High-Demand Careers</div></div>
               </li>
               <li class="schedule-item">
                 <span class="schedule-time">1:35 PM</span>
                 <span class="schedule-dot"></span>
-                <div><div class="schedule-title">Bryan Henry — Barita Investments</div><div class="schedule-desc">Financial Confidence: Managing Income, Debt, Growth as a Marketing Professional</div></div>
+                <div><div class="schedule-title">Introduction of Bryan Henry</div><div class="schedule-desc">Lashuani Spencer</div></div>
               </li>
               <li class="schedule-item">
                 <span class="schedule-time">2:00 PM</span>
                 <span class="schedule-dot"></span>
-                <div><div class="schedule-title">Panel Discussion and Q&A</div><div class="schedule-desc">W. Hopkins, G. Martin, C. Grant, K. Rowe, M. Blake</div></div>
+                <div><div class="schedule-title">Address — Financial Confidence: Managing Income, Debt, Growth as a Marketing Professional</div></div>
+              </li>
+              <li class="schedule-item">
+                <span class="schedule-time">2:55 PM</span>
+                <span class="schedule-dot"></span>
+                <div><div class="schedule-title">Panel Discussion and Q&A</div><div class="schedule-desc">Moderator — Dontae Francis</div></div>
               </li>
               <li class="schedule-item">
                 <span class="schedule-time">3:55 PM</span>
                 <span class="schedule-dot"></span>
-                <div><div class="schedule-title">Closing</div></div>
+                <div><div class="schedule-title">Closing</div><div class="schedule-desc">Shamike Gordon, CEO</div></div>
               </li>
             </ul>
           </div>
