@@ -58,6 +58,7 @@ export function initSlideTabs() {
     cursor.style.left = tab.offsetLeft + 'px';
     cursor.style.width = tab.offsetWidth + 'px';
     cursor.style.opacity = '1';
+    tab.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
   }
 
   function setCursorToSelected() {

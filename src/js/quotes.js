@@ -13,6 +13,20 @@ export function initQuotesCarousel() {
   let currentIndex = 0;
   let interval = null;
 
+  function syncTrackHeight() {
+    let maxHeight = 0;
+    cards.forEach((card) => {
+      const wasActive = card.classList.contains('active');
+      if (!wasActive) card.classList.add('active');
+      const height = card.offsetHeight;
+      if (height > maxHeight) maxHeight = height;
+      if (!wasActive) card.classList.remove('active');
+    });
+    if (maxHeight > 0) {
+      track.style.minHeight = `${maxHeight}px`;
+    }
+  }
+
   // Build dot indicators
   cards.forEach((_, i) => {
     const dot = document.createElement('button');
@@ -68,5 +82,8 @@ export function initQuotesCarousel() {
   }
 
   // Start
+  syncTrackHeight();
+  window.addEventListener('resize', syncTrackHeight);
+  setTimeout(syncTrackHeight, 250);
   startAutoPlay();
 }
