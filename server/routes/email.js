@@ -1,5 +1,5 @@
 import express from 'express';
-import { getAttendees, getAttendeeById } from '../sheets.js';
+import { getAttendees, getAttendeeById, updateEmailSent } from '../sheets.js';
 import { sendEmail, sendBulkEmails, buildEmailHtml } from '../email.js';
 
 const router = express.Router();
@@ -17,6 +17,10 @@ router.post('/send/:id', async (req, res) => {
     }
 
     const result = await sendEmail(attendee);
+    
+    // Mark email as sent in the sheet
+    await updateEmailSent(req.params.id);
+    
     res.json({ success: true, data: result });
   } catch (error) {
     console.error('Email send error:', error.message);
@@ -24,14 +28,25 @@ router.post('/send/:id', async (req, res) => {
   }
 });
 
-// POST /api/email/send-all — Send emails to all attendees
+// POST /api/email/send-all — Send emails to all attendees (excludes already sent)
 router.post('/send-all', async (req, res) => {
   try {
+    const { includeAlreadySent } = req.body; // Optional: force resend
     const attendees = await getAttendees();
-    const withEmail = attendees.filter((a) => a.email && a.email.includes('@'));
+    let withEmail = attendees.filter((a) => a.email && a.email.includes('@'));
+    
+    // By default, exclude attendees who already received emails
+    if (!includeAlreadySent) {
+      withEmail = withEmail.filter((a) => !a.emailSent);
+    }
 
     if (withEmail.length === 0) {
-      return res.status(400).json({ success: false, error: 'No attendees with valid email addresses' });
+      return res.status(400).json({ 
+        success: false, 
+        error: includeAlreadySent 
+          ? 'No attendees with valid email addresses' 
+          : 'No attendees pending email (all have been sent). Use "includeAlreadySent" to resend.'
+      });
     }
 
     // Send immediately and respond, then process in background
@@ -41,18 +56,34 @@ router.post('/send-all', async (req, res) => {
       total: withEmail.length,
     });
 
-    // Process emails in background
-    const results = await sendBulkEmails(withEmail, (progress) => {
-      console.log(`Email progress: ${progress.current}/${progress.total} — Last: ${progress.lastSent}`);
-    });
-
-    console.log(`Email send complete: ${results.sent} sent, ${results.failed} failed`);
-    if (results.errors.length > 0) {
-      console.log('Failed emails:', results.errors.map((e) => `${e.name}: ${e.error}`).join(', '));
+    // Process emails in background with tracking
+    for (const attendee of withEmail) {
+      try {
+        await sendEmail(attendee);
+        await updateEmailSent(attendee.id);
+        console.log(`Email sent to ${attendee.name} (${attendee.email})`);
+      } catch (error) {
+        console.error(`Failed to send to ${attendee.name}:`, error.message);
+      }
+      // Small delay to avoid rate limiting
+      await new Promise((resolve) => setTimeout(resolve, 1000));
     }
+
+    console.log(`Email send complete for ${withEmail.length} attendees`);
   } catch (error) {
     console.error('Bulk email error:', error.message);
     // Response already sent, just log
+  }
+});
+
+// POST /api/email/mark-sent/:id — Mark an attendee's email as sent (for client-side EmailJS)
+router.post('/mark-sent/:id', async (req, res) => {
+  try {
+    const result = await updateEmailSent(req.params.id);
+    res.json({ success: true, data: result });
+  } catch (error) {
+    console.error('Mark email sent error:', error.message);
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 

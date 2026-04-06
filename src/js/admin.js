@@ -28,13 +28,12 @@ async function sendEmailViaEmailJS(attendee) {
   const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(attendee.id)}`;
   const eventPassUrl = `${BASE_URL}/?id=${attendee.id}`;
   const scheduleText = [
-    '8:30 AM — Registration & Check-in',
-    '9:00 AM — Opening Ceremony',
-    '9:30 AM — Keynote Address',
-    '10:30 AM — Coffee Break',
-    '12:00 PM — Lunch & Networking',
-    '2:00 PM — Panel Discussion',
-    '3:00 PM — Closing Remarks & Awards',
+    '8:15 AM — Registration',
+    '9:50 AM — Keynote Address',
+    '10:20 AM — Coffee Break',
+    '12:00 PM — Lunch',
+    '2:00 PM — Panel Discussion and Q&A',
+    '3:55 PM — Closing',
   ].join('\n');
 
   const templateParams = {
@@ -49,7 +48,7 @@ async function sendEmailViaEmailJS(attendee) {
     event_pass_url: eventPassUrl,
     base_url: BASE_URL,
     event_date: 'Wednesday, April 8, 2026',
-    event_time: '9:00 AM – 3:00 PM',
+    event_time: '9:00 AM – 4:00 PM',
     venue_name: 'Hope Fellowship Church',
     venue_room: 'Hope Fellowship Auditorium',
     venue_map_url: 'https://maps.app.goo.gl/t4LmsQx8TP5ZSTvn6',
@@ -104,7 +103,7 @@ function renderAttendeeTable(attendees) {
   if (attendees.length === 0) {
     tbody.innerHTML = `
       <tr>
-        <td colspan="6" style="text-align: center; padding: 2rem; color: var(--gray-400);">
+        <td colspan="7" style="text-align: center; padding: 2rem; color: var(--gray-400);">
           No attendees found matching your filters.
         </td>
       </tr>
@@ -133,12 +132,17 @@ function renderAttendeeTable(attendees) {
           ${a.checkinStatus}
         </span>
       </td>
+      <td>
+        <span class="badge ${a.emailSent ? 'badge-success' : 'badge-warning'}" title="${a.emailSent && a.emailSentTime ? 'Sent: ' + formatTime(a.emailSentTime) : 'Not sent yet'}">
+          ${a.emailSent ? '<i class="ph ph-check"></i> Sent' : '<i class="ph ph-clock"></i> Pending'}
+        </span>
+      </td>
       <td style="display: flex; gap: 8px; align-items: center;">
         ${a.checkinStatus === 'Checked In'
           ? `<button class="btn btn-outline btn-sm" onclick="undoCheckIn('${a.id}')">Undo</button>`
           : `<button class="btn btn-success btn-sm" onclick="checkInAttendee('${a.id}')">Check In</button>`
         }
-        <button class="btn btn-outline btn-sm btn-icon" id="email-btn-${a.id}" onclick="sendEmailToAttendee('${a.id}')" title="Send Email Pass"><i class="ph ph-envelope-simple"></i></button>
+        <button class="btn btn-outline btn-sm btn-icon ${a.emailSent ? 'btn-sent' : ''}" id="email-btn-${a.id}" onclick="sendEmailToAttendee('${a.id}')" title="${a.emailSent ? 'Resend Email Pass' : 'Send Email Pass'}"><i class="ph ${a.emailSent ? 'ph-paper-plane-tilt' : 'ph-envelope-simple'}"></i></button>
         <a href="/?id=${a.id}" target="_blank" class="btn btn-outline btn-sm btn-icon" title="View Event Pass Open in new tab"><i class="ph ph-identification-card"></i></a>
       </td>
     </tr>
@@ -300,6 +304,7 @@ window.filterAttendees = function () {
   const search = (document.getElementById('search-input').value || '').toLowerCase();
   const roleFilter = document.getElementById('role-filter').value;
   const statusFilter = document.getElementById('status-filter').value;
+  const emailFilter = document.getElementById('email-filter').value;
 
   let filtered = allAttendees;
 
@@ -318,6 +323,14 @@ window.filterAttendees = function () {
 
   if (statusFilter) {
     filtered = filtered.filter((a) => a.checkinStatus === statusFilter);
+  }
+
+  if (emailFilter) {
+    if (emailFilter === 'sent') {
+      filtered = filtered.filter((a) => a.emailSent === true);
+    } else if (emailFilter === 'pending') {
+      filtered = filtered.filter((a) => a.emailSent !== true);
+    }
   }
 
   renderAttendeeTable(filtered);
@@ -456,17 +469,24 @@ window.closeEmailPreview = function () {
 };
 
 window.sendAllEmails = async function () {
-  const withEmail = allAttendees.filter((a) => a.email && a.email.includes('@'));
+  // Filter: has email AND not already sent
+  const pending = allAttendees.filter((a) => a.email && a.email.includes('@') && !a.emailSent);
+  const alreadySent = allAttendees.filter((a) => a.email && a.email.includes('@') && a.emailSent).length;
 
-  if (withEmail.length === 0) {
-    showToast('No attendees with valid email addresses', 'warning');
+  if (pending.length === 0) {
+    if (alreadySent > 0) {
+      showToast(`All ${alreadySent} attendees have already received emails`, 'info');
+    } else {
+      showToast('No attendees with valid email addresses', 'warning');
+    }
     return;
   }
 
-  const confirmed = confirm(
-    `This will send personalized emails to ${withEmail.length} attendees.\n\nAre you sure you want to proceed?`
-  );
+  const message = alreadySent > 0
+    ? `This will send emails to ${pending.length} attendees who haven't received one yet.\n(${alreadySent} already sent — skipping them)\n\nProceed?`
+    : `This will send personalized emails to ${pending.length} attendees.\n\nAre you sure you want to proceed?`;
 
+  const confirmed = confirm(message);
   if (!confirmed) return;
 
   const btn = document.getElementById('send-all-btn');
@@ -483,13 +503,19 @@ window.sendAllEmails = async function () {
   let failed = 0;
   const errors = [];
 
-  for (let i = 0; i < withEmail.length; i++) {
-    const attendee = withEmail[i];
-    progressText.textContent = `Sending ${i + 1}/${withEmail.length}: ${attendee.name}...`;
-    progressFill.style.width = `${((i + 1) / withEmail.length) * 100}%`;
+  for (let i = 0; i < pending.length; i++) {
+    const attendee = pending[i];
+    progressText.textContent = `Sending ${i + 1}/${pending.length}: ${attendee.name}...`;
+    progressFill.style.width = `${((i + 1) / pending.length) * 100}%`;
 
     try {
       await sendEmailViaEmailJS(attendee);
+      // Mark as sent in backend
+      try {
+        await apiFetch(`/email/mark-sent/${attendee.id}`, { method: 'POST' });
+      } catch (e) {
+        console.warn('Could not update email sent status:', e);
+      }
       sent++;
     } catch (error) {
       failed++;
@@ -498,7 +524,7 @@ window.sendAllEmails = async function () {
     }
 
     // Small delay to avoid rate limiting (EmailJS has limits)
-    if (i < withEmail.length - 1) {
+    if (i < pending.length - 1) {
       await new Promise((resolve) => setTimeout(resolve, 500));
     }
   }
@@ -513,8 +539,12 @@ window.sendAllEmails = async function () {
     showToast(`All ${sent} emails sent successfully!`, 'success');
   }
 
+  // Refresh data to update UI
+  await loadAttendees();
+  filterAttendees();
+
   btn.disabled = false;
-  btn.innerHTML = '<i class="ph ph-paper-plane-tilt"></i> Send All Emails';
+  btn.innerHTML = '<i class="ph ph-paper-plane-tilt"></i> Send All';
 };
 
 window.sendEmailToAttendee = async function (id) {
@@ -531,6 +561,12 @@ window.sendEmailToAttendee = async function (id) {
     return;
   }
 
+  // Warn if already sent
+  if (attendee.emailSent) {
+    const confirmResend = confirm(`Email was already sent to ${attendee.name}. Send again?`);
+    if (!confirmResend) return;
+  }
+
   if (btn) {
     btn.disabled = true;
     btn.innerHTML = '<i class="ph ph-circle-notch ph-spin"></i>';
@@ -538,8 +574,20 @@ window.sendEmailToAttendee = async function (id) {
 
   try {
     await sendEmailViaEmailJS(attendee);
+    
+    // Mark as sent in backend
+    try {
+      await apiFetch(`/email/mark-sent/${id}`, { method: 'POST' });
+    } catch (e) {
+      console.warn('Could not update email sent status:', e);
+    }
+    
     showToast(`Email sent to ${attendee.email}`, 'success');
     if (btn) btn.innerHTML = '<i class="ph ph-check"></i>';
+    
+    // Refresh data to update UI
+    await loadAttendees();
+    filterAttendees();
   } catch (error) {
     console.error('EmailJS error:', error);
     showToast(`Failed: ${error.text || error.message || 'Unknown error'}`, 'error');
@@ -598,15 +646,19 @@ window.sendSelectedEmails = async function () {
   }
 
   const selectedAttendees = allAttendees.filter(a => selectedIds.includes(a.id) && a.email);
+  const alreadySent = selectedAttendees.filter(a => a.emailSent).length;
 
   if (selectedAttendees.length === 0) {
     showToast('No selected attendees have email addresses', 'warning');
     return;
   }
 
-  const confirmed = confirm(
-    `Send personalized emails to ${selectedAttendees.length} selected attendee(s)?`
-  );
+  let message = `Send personalized emails to ${selectedAttendees.length} selected attendee(s)?`;
+  if (alreadySent > 0) {
+    message += `\n\nNote: ${alreadySent} of these have already received emails and will be resent.`;
+  }
+
+  const confirmed = confirm(message);
   if (!confirmed) return;
 
   const btn = document.getElementById('send-selected-btn');
@@ -628,6 +680,12 @@ window.sendSelectedEmails = async function () {
 
     try {
       await sendEmailViaEmailJS(attendee);
+      // Mark as sent in backend
+      try {
+        await apiFetch(`/email/mark-sent/${attendee.id}`, { method: 'POST' });
+      } catch (e) {
+        console.warn('Could not update email sent status:', e);
+      }
       sent++;
     } catch (error) {
       failed++;
@@ -647,8 +705,12 @@ window.sendSelectedEmails = async function () {
   progressText.textContent = `Done! ${sent} sent, ${failed} failed.`;
   showToast(`Emails sent: ${sent} successful, ${failed} failed`, sent > 0 ? 'success' : 'error');
 
+  // Refresh data to update UI
+  await loadAttendees();
+  filterAttendees();
+
   btn.disabled = false;
-  btn.innerHTML = `<i class="ph ph-paper-plane-tilt"></i> Send to Selected (<span id="selected-count">${selectedIds.length}</span>)`;
+  btn.innerHTML = `<i class="ph ph-paper-plane-tilt"></i> Send to Selected (<span id="selected-count">0</span>)`;
 };
 
 // ----- Initialize -----
@@ -664,9 +726,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   const searchInput = document.getElementById('search-input');
   const roleFilter = document.getElementById('role-filter');
   const statusFilter = document.getElementById('status-filter');
+  const emailFilterEl = document.getElementById('email-filter');
   if (searchInput) searchInput.addEventListener('input', filterAttendees);
   if (roleFilter) roleFilter.addEventListener('change', filterAttendees);
   if (statusFilter) statusFilter.addEventListener('change', filterAttendees);
+  if (emailFilterEl) emailFilterEl.addEventListener('change', filterAttendees);
 
   // Load data
   await Promise.all([loadStats(), loadAttendees()]);

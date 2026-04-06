@@ -14,14 +14,17 @@ const SHEET_NAME = 'Attendees';
 // Column mapping (0-indexed)
 const COLUMNS = {
   ID: 0,
-  NAME: 1,
-  EMAIL: 2,
-  ROLE: 3,
-  TABLE_NUMBER: 4,
-  DIETARY: 5,
-  CHECKIN_STATUS: 6,
-  CHECKIN_TIME: 7,
-  QR_CODE_URL: 8,
+  FIRST_NAME: 1,
+  LAST_NAME: 2,
+  EMAIL: 3,
+  ROLE: 4,
+  TABLE_NUMBER: 5,
+  DIETARY: 6,
+  CHECKIN_STATUS: 7,
+  CHECKIN_TIME: 8,
+  QR_CODE_URL: 9,
+  EMAIL_SENT: 10,
+  EMAIL_SENT_TIME: 11,
 };
 
 let sheetsClient = null;
@@ -98,20 +101,21 @@ export async function ensureSheet() {
     // Check if headers exist
     const headerResponse = await client.spreadsheets.values.get({
       spreadsheetId: SHEET_ID,
-      range: `${SHEET_NAME}!A1:I1`,
+      range: `${SHEET_NAME}!A1:L1`,
     });
 
     if (!headerResponse.data.values || headerResponse.data.values.length === 0) {
       // Add headers
       await client.spreadsheets.values.update({
         spreadsheetId: SHEET_ID,
-        range: `${SHEET_NAME}!A1:I1`,
+        range: `${SHEET_NAME}!A1:L1`,
         valueInputOption: 'RAW',
         requestBody: {
           values: [
             [
               'ID',
-              'Name',
+              'First Name',
+              'Last Name',
               'Email',
               'Role',
               'Table Number',
@@ -119,6 +123,8 @@ export async function ensureSheet() {
               'Check-in Status',
               'Check-in Time',
               'QR Code URL',
+              'Email Sent',
+              'Email Sent Time',
             ],
           ],
         },
@@ -140,14 +146,16 @@ export async function getAttendees() {
 
   const response = await client.spreadsheets.values.get({
     spreadsheetId: SHEET_ID,
-    range: `${SHEET_NAME}!A2:I`,
+    range: `${SHEET_NAME}!A2:L`,
   });
 
   const rows = response.data.values || [];
 
   return rows.map((row) => ({
     id: row[COLUMNS.ID] || '',
-    name: row[COLUMNS.NAME] || '',
+    firstName: row[COLUMNS.FIRST_NAME] || '',
+    lastName: row[COLUMNS.LAST_NAME] || '',
+    name: `${row[COLUMNS.FIRST_NAME] || ''} ${row[COLUMNS.LAST_NAME] || ''}`.trim(),
     email: row[COLUMNS.EMAIL] || '',
     role: row[COLUMNS.ROLE] || '',
     tableNumber: row[COLUMNS.TABLE_NUMBER] || '',
@@ -155,6 +163,8 @@ export async function getAttendees() {
     checkinStatus: row[COLUMNS.CHECKIN_STATUS] || 'Not Checked In',
     checkinTime: row[COLUMNS.CHECKIN_TIME] || '',
     qrCodeUrl: row[COLUMNS.QR_CODE_URL] || '',
+    emailSent: row[COLUMNS.EMAIL_SENT] === 'Yes',
+    emailSentTime: row[COLUMNS.EMAIL_SENT_TIME] || '',
   }));
 }
 
@@ -190,7 +200,7 @@ export async function updateCheckIn(id, status = 'Checked In') {
 
   await client.spreadsheets.values.update({
     spreadsheetId: SHEET_ID,
-    range: `${SHEET_NAME}!G${rowNumber}:H${rowNumber}`,
+    range: `${SHEET_NAME}!H${rowNumber}:I${rowNumber}`,
     valueInputOption: 'RAW',
     requestBody: {
       values: [[status, now]],
@@ -201,6 +211,31 @@ export async function updateCheckIn(id, status = 'Checked In') {
 }
 
 /**
+ * Update email sent status for an attendee
+ */
+export async function updateEmailSent(id) {
+  const client = await getClient();
+  const rowNumber = await findRowByAttendeeId(id);
+
+  if (rowNumber < 0) {
+    throw new Error(`Attendee ${id} not found`);
+  }
+
+  const now = new Date().toISOString();
+
+  await client.spreadsheets.values.update({
+    spreadsheetId: SHEET_ID,
+    range: `${SHEET_NAME}!K${rowNumber}:L${rowNumber}`,
+    valueInputOption: 'RAW',
+    requestBody: {
+      values: [['Yes', now]],
+    },
+  });
+
+  return { id, emailSent: true, emailSentTime: now };
+}
+
+/**
  * Add a single attendee row
  */
 export async function addAttendee(attendee) {
@@ -208,13 +243,14 @@ export async function addAttendee(attendee) {
 
   await client.spreadsheets.values.append({
     spreadsheetId: SHEET_ID,
-    range: `${SHEET_NAME}!A:I`,
+    range: `${SHEET_NAME}!A:L`,
     valueInputOption: 'RAW',
     requestBody: {
       values: [
         [
           attendee.id,
-          attendee.name,
+          attendee.firstName,
+          attendee.lastName,
           attendee.email,
           attendee.role,
           attendee.tableNumber,
@@ -222,6 +258,8 @@ export async function addAttendee(attendee) {
           'Not Checked In',
           '',
           attendee.qrCodeUrl || '',
+          'No',
+          '',
         ],
       ],
     },
@@ -238,7 +276,8 @@ export async function addAttendeesBatch(attendees) {
 
   const values = attendees.map((a) => [
     a.id,
-    a.name,
+    a.firstName,
+    a.lastName,
     a.email,
     a.role,
     a.tableNumber,
@@ -246,11 +285,13 @@ export async function addAttendeesBatch(attendees) {
     'Not Checked In',
     '',
     a.qrCodeUrl || '',
+    'No',
+    '',
   ]);
 
   await client.spreadsheets.values.append({
     spreadsheetId: SHEET_ID,
-    range: `${SHEET_NAME}!A:I`,
+    range: `${SHEET_NAME}!A:L`,
     valueInputOption: 'RAW',
     requestBody: {
       values,
@@ -268,7 +309,7 @@ export async function clearAttendees() {
 
   await client.spreadsheets.values.clear({
     spreadsheetId: SHEET_ID,
-    range: `${SHEET_NAME}!A2:I`,
+    range: `${SHEET_NAME}!A2:L`,
   });
 }
 

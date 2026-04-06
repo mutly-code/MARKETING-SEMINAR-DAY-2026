@@ -86,6 +86,18 @@ function generateAttendees() {
     return tableCounter;
   }
 
+  // Helper to split name into first/last
+  function splitName(fullName) {
+    const parts = fullName.trim().split(/\s+/);
+    if (parts.length === 1) {
+      return { firstName: parts[0], lastName: '' };
+    }
+    return {
+      firstName: parts[0],
+      lastName: parts.slice(1).join(' '),
+    };
+  }
+
   // 76 Students
   const usedNames = new Set();
   for (let i = 0; i < 76; i++) {
@@ -95,10 +107,12 @@ function generateAttendees() {
     } while (usedNames.has(fullName));
     usedNames.add(fullName);
 
+    const { firstName, lastName } = splitName(fullName);
     const id = `STU-${String(i + 1).padStart(3, '0')}`;
     attendees.push({
       id,
-      name: fullName,
+      firstName,
+      lastName,
       email: generateEmail(fullName, 'Student'),
       role: 'Student',
       tableNumber: String(assignTable()),
@@ -109,10 +123,12 @@ function generateAttendees() {
 
   // 4 Facilitators
   facilitatorNames.forEach((name, i) => {
+    const { firstName, lastName } = splitName(name);
     const id = `FAC-${String(i + 1).padStart(3, '0')}`;
     attendees.push({
       id,
-      name,
+      firstName,
+      lastName,
       email: generateEmail(name, 'Facilitator'),
       role: 'Facilitator',
       tableNumber: String(assignTable()),
@@ -123,10 +139,12 @@ function generateAttendees() {
 
   // 10 Speakers
   speakerNames.forEach((name, i) => {
+    const { firstName, lastName } = splitName(name);
     const id = `SPK-${String(i + 1).padStart(3, '0')}`;
     attendees.push({
       id,
-      name,
+      firstName,
+      lastName,
       email: generateEmail(name, 'Speaker'),
       role: 'Speaker',
       tableNumber: String(assignTable()),
@@ -143,10 +161,12 @@ function generateAttendees() {
     } while (usedNames.has(fullName));
     usedNames.add(fullName);
 
+    const { firstName, lastName } = splitName(fullName);
     const id = `GST-${String(i + 1).padStart(3, '0')}`;
     attendees.push({
       id,
-      name: fullName,
+      firstName,
+      lastName,
       email: generateEmail(fullName, 'Guest'),
       role: 'Guest',
       tableNumber: String(assignTable()),

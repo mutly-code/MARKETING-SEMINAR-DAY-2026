@@ -188,7 +188,8 @@ img{max-width:100%;height:auto}
 .speaker-card:hover{transform:translateY(-6px);box-shadow:0 16px 40px rgba(26,61,176,0.3);border-color:rgba(212,165,32,0.4)}
 .speaker-card--keynote{border:2px solid var(--gold);grid-column:span 2;grid-row:span 1}
 .speaker-card--keynote:hover{box-shadow:var(--shadow-gold)}
-.speaker-card__img{width:100%;height:100%;object-fit:cover;transition:transform 0.5s ease}
+.speaker-card__img{width:100%;height:100%;object-fit:cover;object-position:center 28%;transition:transform 0.5s ease}
+.speaker-card--keynote .speaker-card__img{object-position:center 20%}
 .speaker-card:hover .speaker-card__img{transform:scale(1.06)}
 .speaker-card__gradient{position:absolute;bottom:0;left:0;width:100%;height:65%;background:linear-gradient(to top,rgba(7,13,32,0.95) 0%,rgba(7,13,32,0.7) 40%,transparent 100%);z-index:2}
 .speaker-card__content{position:absolute;bottom:0;left:0;right:0;padding:1.25rem;z-index:3;display:flex;flex-direction:column;gap:4px}
@@ -238,7 +239,8 @@ img{max-width:100%;height:auto}
   margin-bottom: -35px;
   background: var(--bg-card);
 }
-.team-card__img { width: 100%; height: 100%; object-fit: cover; transition: transform var(--transition-slow); }
+.team-card__img { width: 100%; height: 100%; object-fit: cover; object-position: center 30%; transition: transform var(--transition-slow); }
+.team-card__img--top-focus { object-position: center 20%; }
 .team-card:hover .team-card__img { transform: scale(1.05); }
 .team-card__body {
   background: #2B5E99; /* Vibrant professional blue matching the image */

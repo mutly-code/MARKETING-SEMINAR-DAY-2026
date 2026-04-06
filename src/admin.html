@@ -175,6 +175,11 @@
             <option value="Checked In">Checked In</option>
             <option value="Not Checked In">Not Checked In</option>
           </select>
+          <select class="filter-select" id="email-filter">
+            <option value="">All Emails</option>
+            <option value="sent">Email Sent</option>
+            <option value="pending">Pending</option>
+          </select>
         </div>
 
         <div style="overflow-x: auto;">
@@ -185,12 +190,13 @@
                 <th>Attendee</th>
                 <th>Role</th>
                 <th>Table</th>
-                <th>Status</th>
+                <th>Check-in</th>
+                <th>Email</th>
                 <th>Actions</th>
               </tr>
             </thead>
             <tbody id="attendee-tbody">
-              <tr><td colspan="6" class="text-center text-muted" style="padding: 2rem;">Loading attendees...</td></tr>
+              <tr><td colspan="7" class="text-center text-muted" style="padding: 2rem;">Loading attendees...</td></tr>
             </tbody>
           </table>
         </div>

@@ -48,11 +48,11 @@ export function buildEmailHtml(attendee) {
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
-<body style="margin: 0; padding: 0; background-color: #F8FAFC; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
-  <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #F8FAFC; padding: 40px 20px;">
+<body style="margin: 0; padding: 0; background-color: #0A1628; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #0A1628; padding: 40px 20px;">
     <tr>
       <td align="center">
-        <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 24px rgba(10,22,40,0.08);">
+        <table width="600" cellpadding="0" cellspacing="0" style="background-color: #0F2440; border-radius: 12px; overflow: hidden; max-width: 100%;">
           
           <!-- Gold Accent Bar -->
           <tr>
@@ -72,10 +72,10 @@ export function buildEmailHtml(attendee) {
 
           <!-- Welcome -->
           <tr>
-            <td style="padding: 30px 40px 20px;">
-              <p style="font-size: 16px; color: #334155; margin: 0 0 8px;">Dear <strong>${attendee.name}</strong>,</p>
-              <p style="font-size: 14px; color: #64748B; line-height: 1.6; margin: 0;">
-                You are cordially invited to the <strong>44th UTech Marketing Seminar</strong>. 
+            <td style="padding: 30px 40px 20px; background-color: #0F2440;">
+              <p style="font-size: 16px; color: #E2E8F0; margin: 0 0 8px;">Dear <strong style="color: #ffffff;">${attendee.name}</strong>,</p>
+              <p style="font-size: 14px; color: #94A3B8; line-height: 1.6; margin: 0;">
+                You are cordially invited to the <strong style="color: #ffffff;">44th UTech Marketing Seminar</strong>. 
                 Below you will find your personalized event pass with all the details you need.
               </p>
             </td>
@@ -83,41 +83,41 @@ export function buildEmailHtml(attendee) {
 
           <!-- Event Details -->
           <tr>
-            <td style="padding: 0 40px 20px;">
-              <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #F8FAFC; border-radius: 8px; border: 1px solid #E2E8F0;">
+            <td style="padding: 0 40px 20px; background-color: #0F2440;">
+              <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #1E293B; border-radius: 8px; border: 1px solid #334155;">
                 <tr>
                   <td style="padding: 20px;">
                     <table width="100%" cellpadding="0" cellspacing="0">
                       <tr>
-                        <td width="50%" style="padding: 8px 0;">
-                          <span style="font-size: 11px; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.05em;">Date</span><br>
-                          <strong style="font-size: 14px; color: #0F172A;">Wednesday, April 8, 2026</strong>
+                        <td width="50%" style="padding: 8px 0; vertical-align: top;">
+                          <span style="font-size: 11px; color: #64748B; text-transform: uppercase; letter-spacing: 0.05em;">Date</span><br>
+                          <strong style="font-size: 14px; color: #ffffff;">Wednesday, April 8, 2026</strong>
                         </td>
-                        <td width="50%" style="padding: 8px 0;">
-                          <span style="font-size: 11px; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.05em;">Time</span><br>
-                          <strong style="font-size: 14px; color: #0F172A;">9:00 AM – 3:00 PM</strong>
+                        <td width="50%" style="padding: 8px 0; vertical-align: top;">
+                          <span style="font-size: 11px; color: #64748B; text-transform: uppercase; letter-spacing: 0.05em;">Time</span><br>
+                          <strong style="font-size: 14px; color: #ffffff;">9:00 AM – 4:00 PM</strong>
                         </td>
                       </tr>
                       <tr>
-                        <td width="50%" style="padding: 8px 0;">
-                          <span style="font-size: 11px; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.05em;">Venue</span><br>
-                          <strong style="font-size: 14px; color: #0F172A;">Hope Fellowship Church</strong><br>
-                          <span style="font-size: 12px; color: #64748B;">Hope Fellowship Auditorium</span><br>
-                          <a href="https://maps.app.goo.gl/t4LmsQx8TP5ZSTvn6" target="_blank" style="font-size: 11px; color: #3B82F6; text-decoration: none; display: inline-block; margin-top: 4px;">View on Google Maps</a>
+                        <td width="50%" style="padding: 8px 0; vertical-align: top;">
+                          <span style="font-size: 11px; color: #64748B; text-transform: uppercase; letter-spacing: 0.05em;">Venue</span><br>
+                          <strong style="font-size: 14px; color: #ffffff;">Hope Fellowship Church</strong><br>
+                          <span style="font-size: 12px; color: #94A3B8;">Hope Fellowship Auditorium</span><br>
+                          <a href="https://maps.app.goo.gl/t4LmsQx8TP5ZSTvn6" target="_blank" style="font-size: 11px; color: #60A5FA; text-decoration: none; display: inline-block; margin-top: 4px;">View on Google Maps</a>
                         </td>
-                        <td width="50%" style="padding: 8px 0;">
-                          <span style="font-size: 11px; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.05em;">Role</span><br>
+                        <td width="50%" style="padding: 8px 0; vertical-align: top;">
+                          <span style="font-size: 11px; color: #64748B; text-transform: uppercase; letter-spacing: 0.05em;">Role</span><br>
                           <strong style="font-size: 14px; color: #D4A843;">${attendee.role}</strong>
                         </td>
                       </tr>
                       <tr>
-                        <td width="50%" style="padding: 8px 0;">
-                          <span style="font-size: 11px; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.05em;">Table Number</span><br>
-                          <strong style="font-size: 18px; color: #0A1628;">Table ${attendee.tableNumber}</strong>
+                        <td width="50%" style="padding: 8px 0; vertical-align: top;">
+                          <span style="font-size: 11px; color: #64748B; text-transform: uppercase; letter-spacing: 0.05em;">Table Number</span><br>
+                          <strong style="font-size: 18px; color: #ffffff;">Table ${attendee.tableNumber}</strong>
                         </td>
-                        <td width="50%" style="padding: 8px 0;">
-                          <span style="font-size: 11px; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.05em;">Dietary</span><br>
-                          <strong style="font-size: 14px; color: #0F172A;">${attendee.dietary || 'None'}</strong>
+                        <td width="50%" style="padding: 8px 0; vertical-align: top;">
+                          <span style="font-size: 11px; color: #64748B; text-transform: uppercase; letter-spacing: 0.05em;">Dietary</span><br>
+                          <strong style="font-size: 14px; color: #ffffff;">${attendee.dietary || 'None'}</strong>
                         </td>
                       </tr>
                     </table>
@@ -129,14 +129,14 @@ export function buildEmailHtml(attendee) {
 
           <!-- QR Code -->
           <tr>
-            <td style="padding: 0 40px 20px; text-align: center;">
-              <p style="font-size: 14px; color: #64748B; margin: 0 0 12px;">
+            <td style="padding: 0 40px 20px; text-align: center; background-color: #0F2440;">
+              <p style="font-size: 14px; color: #94A3B8; margin: 0 0 12px;">
                 Present this QR code at the registration desk for check-in:
               </p>
-              <div style="display: inline-block; background: #ffffff; padding: 16px; border-radius: 12px; border: 2px solid #E2E8F0;">
+              <div style="display: inline-block; background: #ffffff; padding: 16px; border-radius: 12px; border: 2px solid #D4A843;">
                 <img src="cid:qrcode" alt="Your QR Code" width="180" height="180" style="display: block;" />
               </div>
-              <p style="font-size: 12px; color: #94A3B8; margin: 12px 0 0;">
+              <p style="font-size: 12px; color: #64748B; margin: 12px 0 0;">
                 ID: ${attendee.id}
               </p>
             </td>
@@ -144,7 +144,7 @@ export function buildEmailHtml(attendee) {
 
           <!-- View Event Pass Button — Gold -->
           <tr>
-            <td style="padding: 0 40px 30px; text-align: center;">
+            <td style="padding: 0 40px 30px; text-align: center; background-color: #0F2440;">
               <a href="${attendeeUrl}" style="display: inline-block; background: linear-gradient(135deg, #D4A843, #FFD700); color: #0A1628; padding: 14px 32px; border-radius: 8px; text-decoration: none; font-size: 14px; font-weight: 700; margin-bottom: 16px;">
                 View Your Full Event Pass
               </a>
@@ -157,14 +157,15 @@ export function buildEmailHtml(attendee) {
 
           <!-- Schedule Preview -->
           <tr>
-            <td style="padding: 0 40px 30px;">
-              <h3 style="font-size: 15px; color: #0F172A; margin: 0 0 12px; border-bottom: 2px solid #D4A843; padding-bottom: 8px;">Schedule Highlights</h3>
-              <table width="100%" cellpadding="0" cellspacing="0" style="font-size: 13px; color: #475569;">
-                <tr><td style="padding: 6px 0;"><strong style="color: #0A1628;">9:00 AM</strong></td><td style="padding: 6px 0;">Opening Prayer</td></tr>
-                <tr><td style="padding: 6px 0;"><strong style="color: #0A1628;">9:45 AM</strong></td><td style="padding: 6px 0;">Keynote Address</td></tr>
-                <tr><td style="padding: 6px 0;"><strong style="color: #0A1628;">12:00 PM</strong></td><td style="padding: 6px 0;">Lunch</td></tr>
-                <tr><td style="padding: 6px 0;"><strong style="color: #0A1628;">1:50 PM</strong></td><td style="padding: 6px 0;">Panel Discussion and Q&A</td></tr>
-                <tr><td style="padding: 6px 0;"><strong style="color: #0A1628;">2:40 PM</strong></td><td style="padding: 6px 0;">Award Ceremony</td></tr>
+            <td style="padding: 0 40px 30px; background-color: #0F2440;">
+              <h3 style="font-size: 15px; color: #ffffff; margin: 0 0 12px; border-bottom: 2px solid #D4A843; padding-bottom: 8px;">Schedule Highlights</h3>
+              <table width="100%" cellpadding="0" cellspacing="0" style="font-size: 13px;">
+                <tr><td style="padding: 6px 0; color: #ffffff; width: 80px;"><strong>8:15 AM</strong></td><td style="padding: 6px 0; color: #CBD5E1;">Registration</td></tr>
+                <tr><td style="padding: 6px 0; color: #ffffff;"><strong>9:50 AM</strong></td><td style="padding: 6px 0; color: #CBD5E1;">Keynote Address — MP Damion Crawford</td></tr>
+                <tr><td style="padding: 6px 0; color: #ffffff;"><strong>10:20 AM</strong></td><td style="padding: 6px 0; color: #CBD5E1;">Coffee Break</td></tr>
+                <tr><td style="padding: 6px 0; color: #ffffff;"><strong>12:00 PM</strong></td><td style="padding: 6px 0; color: #CBD5E1;">Lunch</td></tr>
+                <tr><td style="padding: 6px 0; color: #ffffff;"><strong>2:00 PM</strong></td><td style="padding: 6px 0; color: #CBD5E1;">Panel Discussion and Q&amp;A</td></tr>
+                <tr><td style="padding: 6px 0; color: #ffffff;"><strong>3:55 PM</strong></td><td style="padding: 6px 0; color: #CBD5E1;">Closing</td></tr>
               </table>
             </td>
           </tr>
