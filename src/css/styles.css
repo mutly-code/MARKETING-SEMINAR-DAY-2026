@@ -189,7 +189,7 @@ img{max-width:100%;height:auto}
 .speaker-card--keynote{border:2px solid var(--gold);grid-column:span 2;grid-row:span 1}
 .speaker-card--keynote:hover{box-shadow:var(--shadow-gold)}
 .speaker-card__img{width:100%;height:100%;object-fit:cover;object-position:center 28%;transition:transform 0.5s ease}
-.speaker-card--keynote .speaker-card__img{object-position:center 10%}
+.speaker-card--keynote .speaker-card__img{object-position:49% 12%}
 .speaker-card:hover .speaker-card__img{transform:scale(1.06)}
 .speaker-card__gradient{position:absolute;bottom:0;left:0;width:100%;height:65%;background:linear-gradient(to top,rgba(7,13,32,0.95) 0%,rgba(7,13,32,0.7) 40%,transparent 100%);z-index:2}
 .speaker-card__content{position:absolute;bottom:0;left:0;right:0;padding:1.25rem;z-index:3;display:flex;flex-direction:column;gap:4px}

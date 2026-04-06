@@ -469,9 +469,10 @@ window.closeEmailPreview = function () {
 };
 
 window.sendAllEmails = async function () {
-  // Filter: has email AND not already sent
-  const pending = allAttendees.filter((a) => a.email && a.email.includes('@') && !a.emailSent);
-  const alreadySent = allAttendees.filter((a) => a.email && a.email.includes('@') && a.emailSent).length;
+  // Always fetch fresh attendee data before bulk sends (supports live sheet/site changes)
+  const { data: latestAttendees } = await apiFetch('/attendees');
+  const pending = latestAttendees.filter((a) => a.email && a.email.includes('@') && !a.emailSent);
+  const alreadySent = latestAttendees.filter((a) => a.email && a.email.includes('@') && a.emailSent).length;
 
   if (pending.length === 0) {
     if (alreadySent > 0) {
@@ -509,10 +510,21 @@ window.sendAllEmails = async function () {
     progressFill.style.width = `${((i + 1) / pending.length) * 100}%`;
 
     try {
-      await sendEmailViaEmailJS(attendee);
+      // Re-check each attendee live to avoid stale sends while batch is running
+      const { data: freshAttendee } = await apiFetch(`/attendees/${attendee.id}`);
+      if (!freshAttendee.email || !freshAttendee.email.includes('@')) {
+        failed++;
+        errors.push({ name: attendee.name, error: 'No valid email address' });
+        continue;
+      }
+      if (freshAttendee.emailSent) {
+        continue;
+      }
+
+      await sendEmailViaEmailJS(freshAttendee);
       // Mark as sent in backend
       try {
-        await apiFetch(`/email/mark-sent/${attendee.id}`, { method: 'POST' });
+        await apiFetch(`/email/mark-sent/${freshAttendee.id}`, { method: 'POST' });
       } catch (e) {
         console.warn('Could not update email sent status:', e);
       }
@@ -549,11 +561,14 @@ window.sendAllEmails = async function () {
 
 window.sendEmailToAttendee = async function (id) {
   const btn = document.querySelector(`#email-btn-${id}`);
-  const attendee = allAttendees.find((a) => a.id === id);
+  let attendee = allAttendees.find((a) => a.id === id);
 
-  if (!attendee) {
-    showToast('Attendee not found', 'error');
-    return;
+  // Always pull latest attendee snapshot before sending (live updates safe)
+  try {
+    const { data: freshAttendee } = await apiFetch(`/attendees/${id}`);
+    attendee = freshAttendee;
+  } catch {
+    // Fallback to local cached attendee if live fetch fails
   }
 
   if (!attendee.email) {
@@ -645,7 +660,9 @@ window.sendSelectedEmails = async function () {
     return;
   }
 
-  const selectedAttendees = allAttendees.filter(a => selectedIds.includes(a.id) && a.email);
+  // Fetch fresh snapshot so selected sends respect live changes
+  const { data: latestAttendees } = await apiFetch('/attendees');
+  const selectedAttendees = latestAttendees.filter(a => selectedIds.includes(a.id) && a.email);
   const alreadySent = selectedAttendees.filter(a => a.emailSent).length;
 
   if (selectedAttendees.length === 0) {
@@ -679,10 +696,17 @@ window.sendSelectedEmails = async function () {
     progressText.textContent = `Sending ${i + 1}/${selectedAttendees.length}: ${attendee.name}...`;
 
     try {
-      await sendEmailViaEmailJS(attendee);
+      // Re-check each selected attendee live to avoid stale sends
+      const { data: freshAttendee } = await apiFetch(`/attendees/${attendee.id}`);
+      if (!freshAttendee.email || !freshAttendee.email.includes('@')) {
+        failed++;
+        continue;
+      }
+
+      await sendEmailViaEmailJS(freshAttendee);
       // Mark as sent in backend
       try {
-        await apiFetch(`/email/mark-sent/${attendee.id}`, { method: 'POST' });
+        await apiFetch(`/email/mark-sent/${freshAttendee.id}`, { method: 'POST' });
       } catch (e) {
         console.warn('Could not update email sent status:', e);
       }
