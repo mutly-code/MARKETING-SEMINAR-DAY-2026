@@ -10,7 +10,7 @@ dotenv.config();
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 // Cloudinary-hosted white logo for email templates
-const LOGO_URL = 'https://res.cloudinary.com/dvrzwuxaw/image/upload/v1775297798/white_logo_tnnti3.png';
+const LOGO_URL = 'https://res.cloudinary.com/dvrzwuxaw/image/upload/v1775524566/Untitled_design_i9wxqa.png';
 
 const EMAIL_USER = process.env.EMAIL_USER;
 const EMAIL_APP_PASSWORD = process.env.EMAIL_APP_PASSWORD;
