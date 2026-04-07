@@ -1,5 +1,5 @@
 /**
- * Quotes Carousel — Auto-rotating testimonials with fade transitions
+ * Messages Carousel — Auto-rotating testimonials with fade transitions
  * Rotates every 5 seconds, pauses on hover, supports dot navigation
  */
 export function initQuotesCarousel() {
@@ -31,7 +31,7 @@ export function initQuotesCarousel() {
   cards.forEach((_, i) => {
     const dot = document.createElement('button');
     dot.className = `quotes-dot${i === 0 ? ' active' : ''}`;
-    dot.setAttribute('aria-label', `View quote ${i + 1}`);
+    dot.setAttribute('aria-label', `View message ${i + 1}`);
     dot.addEventListener('click', () => goTo(i));
     dotsContainer.appendChild(dot);
   });
