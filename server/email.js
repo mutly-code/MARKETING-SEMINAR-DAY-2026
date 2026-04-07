@@ -66,8 +66,10 @@ export function buildEmailHtml(attendee) {
           <!-- Header — Deep Navy (image-based to prevent inversion) -->
           <tr>
             <td bgcolor="#0A1628" style="background-color: #0A1628; padding: 36px 40px 28px; text-align: center;">
-              <img src="${LOGO_URL}" alt="UTech Marketing Seminar" style="display: block; margin: 0 auto 18px; max-height: 90px; max-width: 220px; height: auto; width: auto;" />
-              <h1 style="color: #ffffff; font-size: 21px; margin: 0 0 6px; letter-spacing: 0.5px; font-weight: 700;">44th UTech Marketing Seminar 2026</h1>
+              <div style="background-color: #0A1628; display: inline-block; padding: 12px 20px; border-radius: 8px;">
+                <img src="${LOGO_URL}" alt="UTech Marketing Seminar" style="display: block; margin: 0 auto; max-height: 90px; max-width: 220px; height: auto; width: auto;" />
+              </div>
+              <h1 style="color: #ffffff; font-size: 21px; margin: 18px 0 6px; letter-spacing: 0.5px; font-weight: 700;">44th UTech Marketing Seminar 2026</h1>
               <p style="color: #D4A843; font-size: 13px; margin: 0; font-style: italic; letter-spacing: 0.3px;">
                 "Your Brand, Your Balance: Thriving as a Marketing Graduate"
               </p>
