@@ -59,6 +59,22 @@ async function sendEmailViaEmailJS(attendee) {
   return emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams);
 }
 
+async function markEmailSentWithRetry(attendeeId, attempts = 3) {
+  let lastError = null;
+  for (let attempt = 1; attempt <= attempts; attempt++) {
+    try {
+      await apiFetch(`/email/mark-sent/${attendeeId}`, { method: 'POST' });
+      return;
+    } catch (error) {
+      lastError = error;
+      if (attempt < attempts) {
+        await new Promise((resolve) => setTimeout(resolve, 300 * attempt));
+      }
+    }
+  }
+  throw lastError || new Error('Failed to update email sent status');
+}
+
 // ----- Data Loading -----
 
 async function loadStats() {
@@ -522,12 +538,7 @@ window.sendAllEmails = async function () {
       }
 
       await sendEmailViaEmailJS(freshAttendee);
-      // Mark as sent in backend
-      try {
-        await apiFetch(`/email/mark-sent/${freshAttendee.id}`, { method: 'POST' });
-      } catch (e) {
-        console.warn('Could not update email sent status:', e);
-      }
+      await markEmailSentWithRetry(freshAttendee.id);
       sent++;
     } catch (error) {
       failed++;
@@ -590,12 +601,7 @@ window.sendEmailToAttendee = async function (id) {
   try {
     await sendEmailViaEmailJS(attendee);
     
-    // Mark as sent in backend
-    try {
-      await apiFetch(`/email/mark-sent/${id}`, { method: 'POST' });
-    } catch (e) {
-      console.warn('Could not update email sent status:', e);
-    }
+    await markEmailSentWithRetry(id);
     
     showToast(`Email sent to ${attendee.email}`, 'success');
     if (btn) btn.innerHTML = '<i class="ph ph-check"></i>';
@@ -704,12 +710,7 @@ window.sendSelectedEmails = async function () {
       }
 
       await sendEmailViaEmailJS(freshAttendee);
-      // Mark as sent in backend
-      try {
-        await apiFetch(`/email/mark-sent/${freshAttendee.id}`, { method: 'POST' });
-      } catch (e) {
-        console.warn('Could not update email sent status:', e);
-      }
+      await markEmailSentWithRetry(freshAttendee.id);
       sent++;
     } catch (error) {
       failed++;

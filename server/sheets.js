@@ -53,6 +53,13 @@ function normalizeHeader(value) {
     .trim();
 }
 
+function isTruthySheetValue(value) {
+  const normalized = String(value || '')
+    .toLowerCase()
+    .trim();
+  return ['yes', 'y', 'true', '1', 'sent'].includes(normalized);
+}
+
 function resolveColumns(headers = []) {
   const resolved = { ...COLUMNS };
   const normalizedHeaders = headers.map((h) => normalizeHeader(h));
@@ -225,7 +232,7 @@ export async function getAttendees() {
     checkinStatus: row[columns.CHECKIN_STATUS] || 'Not Checked In',
     checkinTime: row[columns.CHECKIN_TIME] || '',
     qrCodeUrl: row[columns.QR_CODE_URL] || '',
-    emailSent: row[columns.EMAIL_SENT] === 'Yes',
+    emailSent: isTruthySheetValue(row[columns.EMAIL_SENT]),
     emailSentTime: row[columns.EMAIL_SENT_TIME] || '',
   }));
 }
