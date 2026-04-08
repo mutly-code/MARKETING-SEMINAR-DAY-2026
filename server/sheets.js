@@ -87,7 +87,10 @@ async function getSheetRowsAndColumns(client) {
   const rows = allRows.slice(1);
   const columns = resolveColumns(headers);
 
-  return { rows, columns };
+  // Track actual sheet row numbers (1-indexed, +1 for header)
+  const rowNumbers = rows.map((_, idx) => idx + 2);
+
+  return { rows, columns, rowNumbers };
 }
 
 function toColumnLetter(index) {
@@ -215,9 +218,9 @@ export async function ensureSheet() {
  */
 export async function getAttendees() {
   const client = await getClient();
-  const { rows, columns } = await getSheetRowsAndColumns(client);
+  const { rows, columns, rowNumbers } = await getSheetRowsAndColumns(client);
 
-  return rows.map((row) => ({
+  return rows.map((row, idx) => ({
     id: row[columns.ID] || '',
     firstName: row[columns.FIRST_NAME] || '',
     lastName: row[columns.LAST_NAME] || '',
@@ -234,6 +237,7 @@ export async function getAttendees() {
     qrCodeUrl: row[columns.QR_CODE_URL] || '',
     emailSent: isTruthySheetValue(row[columns.EMAIL_SENT]),
     emailSentTime: row[columns.EMAIL_SENT_TIME] || '',
+    _sheetRow: rowNumbers[idx], // Track actual sheet row for updates
   }));
 }
 
@@ -246,12 +250,13 @@ export async function getAttendeeById(id) {
 }
 
 /**
- * Find the row number for an attendee ID (1-indexed, accounting for header)
+ * Find the row number for an attendee ID (1-indexed)
+ * Returns the actual sheet row number, not calculated from array index
  */
 async function findRowByAttendeeId(id) {
   const attendees = await getAttendees();
-  const index = attendees.findIndex((a) => a.id === id);
-  return index >= 0 ? index + 2 : -1; // +2 for header row and 1-indexing
+  const attendee = attendees.find((a) => a.id === id);
+  return attendee ? attendee._sheetRow : -1;
 }
 
 /**
