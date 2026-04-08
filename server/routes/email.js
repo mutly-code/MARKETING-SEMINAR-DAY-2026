@@ -61,15 +61,12 @@ router.post('/send-all', async (req, res) => {
       try {
         await sendEmail(attendee);
         await updateEmailSent(attendee.id);
-        console.log(`Email sent to ${attendee.name} (${attendee.email})`);
       } catch (error) {
         console.error(`Failed to send to ${attendee.name}:`, error.message);
       }
       // Small delay to avoid rate limiting
       await new Promise((resolve) => setTimeout(resolve, 1000));
     }
-
-    console.log(`Email send complete for ${withEmail.length} attendees`);
   } catch (error) {
     console.error('Bulk email error:', error.message);
     // Response already sent, just log
