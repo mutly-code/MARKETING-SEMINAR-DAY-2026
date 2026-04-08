@@ -60,6 +60,14 @@ function isTruthySheetValue(value) {
   return ['yes', 'y', 'true', '1', 'sent'].includes(normalized);
 }
 
+function isValidEmail(email) {
+  if (!email || typeof email !== 'string') return false;
+  const trimmed = email.trim().toLowerCase();
+  // Basic email regex - must have @ and a domain
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(trimmed);
+}
+
 function resolveColumns(headers = []) {
   const resolved = { ...COLUMNS };
   const normalizedHeaders = headers.map((h) => normalizeHeader(h));
@@ -430,5 +438,120 @@ export async function getCheckInStats() {
     remaining: total - checkedIn,
     percentage: total > 0 ? Math.round((checkedIn / total) * 100) : 0,
     byRole,
+  };
+}
+
+/**
+ * Audit attendee data for issues (duplicates, invalid emails, missing data)
+ */
+export async function auditAttendees() {
+  const attendees = await getAttendees();
+  
+  const issues = [];
+  const seenEmails = new Map(); // email -> attendee
+  const seenIds = new Map(); // id -> attendee
+  
+  attendees.forEach((attendee, idx) => {
+    const row = attendee._sheetRow;
+    
+    // Check for duplicate IDs
+    if (attendee.id) {
+      if (seenIds.has(attendee.id)) {
+        const prevRow = seenIds.get(attendee.id)._sheetRow;
+        issues.push({
+          type: 'duplicate_id',
+          severity: 'error',
+          row,
+          message: `Duplicate ID "${attendee.id}" (also in row ${prevRow})`,
+          attendee: attendee.name,
+        });
+      } else {
+        seenIds.set(attendee.id, attendee);
+      }
+    } else {
+      issues.push({
+        type: 'missing_id',
+        severity: 'error',
+        row,
+        message: 'Missing attendee ID',
+        attendee: attendee.name || '(no name)',
+      });
+    }
+    
+    // Check for duplicate emails
+    const email = (attendee.email || '').trim().toLowerCase();
+    if (email) {
+      if (seenEmails.has(email)) {
+        const prevRow = seenEmails.get(email)._sheetRow;
+        issues.push({
+          type: 'duplicate_email',
+          severity: 'warning',
+          row,
+          message: `Duplicate email "${attendee.email}" (also in row ${prevRow})`,
+          attendee: attendee.name,
+        });
+      } else {
+        seenEmails.set(email, attendee);
+      }
+      
+      // Check for invalid email format
+      if (!isValidEmail(email)) {
+        issues.push({
+          type: 'invalid_email',
+          severity: 'error',
+          row,
+          message: `Invalid email format: "${attendee.email}"`,
+          attendee: attendee.name,
+        });
+      }
+    } else {
+      issues.push({
+        type: 'missing_email',
+        severity: 'warning',
+        row,
+        message: 'Missing email address',
+        attendee: attendee.name,
+      });
+    }
+    
+    // Check for missing name
+    if (!attendee.name || attendee.name.trim() === '') {
+      issues.push({
+        type: 'missing_name',
+        severity: 'warning',
+        row,
+        message: 'Missing attendee name',
+        attendee: `Row ${row}`,
+      });
+    }
+    
+    // Check for missing table number
+    if (!attendee.tableNumber || attendee.tableNumber.trim() === '') {
+      issues.push({
+        type: 'missing_table',
+        severity: 'warning',
+        row,
+        message: 'Missing table number',
+        attendee: attendee.name,
+      });
+    }
+  });
+  
+  const errors = issues.filter(i => i.severity === 'error');
+  const warnings = issues.filter(i => i.severity === 'warning');
+  
+  return {
+    total: attendees.length,
+    issues,
+    summary: {
+      errors: errors.length,
+      warnings: warnings.length,
+      clean: issues.length === 0,
+    },
+    duplicateEmails: [...seenEmails.entries()]
+      .filter(([email, _], idx, arr) => {
+        return attendees.filter(a => (a.email || '').trim().toLowerCase() === email).length > 1;
+      })
+      .map(([email]) => email),
   };
 }

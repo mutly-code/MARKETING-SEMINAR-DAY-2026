@@ -1,6 +1,6 @@
 /**
- * Messages Carousel — Auto-rotating testimonials with fade transitions
- * Rotates every 5 seconds, pauses on hover, supports dot navigation
+ * Messages Carousel — Manual navigation with fade transitions
+ * Supports dot and arrow navigation, NO auto-rotation
  */
 export function initQuotesCarousel() {
   const track = document.querySelector('.quotes-track');
@@ -11,7 +11,6 @@ export function initQuotesCarousel() {
   if (cards.length === 0) return;
 
   let currentIndex = 0;
-  let interval = null;
 
   function syncTrackHeight() {
     const activeCard = cards[currentIndex];
@@ -47,9 +46,6 @@ export function initQuotesCarousel() {
     cards[currentIndex].classList.add('active');
     dotsContainer.children[currentIndex].classList.add('active');
     syncTrackHeight();
-
-    // Reset the interval so the timer starts fresh after manual navigation
-    startAutoPlay();
   }
 
   function next() {
@@ -66,25 +62,8 @@ export function initQuotesCarousel() {
   if (prevBtn) prevBtn.addEventListener('click', prev);
   if (nextBtn) nextBtn.addEventListener('click', next);
 
-  function startAutoPlay() {
-    if (interval) clearInterval(interval);
-    interval = setInterval(next, 10000);
-  }
-
-  // Pause on hover
-  const carousel = document.getElementById('quotes-carousel');
-  if (carousel) {
-    carousel.addEventListener('mouseenter', () => {
-      if (interval) clearInterval(interval);
-    });
-    carousel.addEventListener('mouseleave', () => {
-      startAutoPlay();
-    });
-  }
-
-  // Start
+  // Initialize height
   syncTrackHeight();
   window.addEventListener('resize', syncTrackHeight);
   setTimeout(syncTrackHeight, 250);
-  startAutoPlay();
 }

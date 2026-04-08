@@ -4,6 +4,7 @@ import {
   getAttendeeById,
   addAttendee,
   ensureSheet,
+  auditAttendees,
 } from '../sheets.js';
 import { generateQRCode } from '../qrcode.js';
 import { v4 as uuidv4 } from 'uuid';
@@ -41,6 +42,20 @@ router.get('/', async (req, res) => {
     res.json({ success: true, data: filtered, total: filtered.length });
   } catch (error) {
     console.error('Error fetching attendees:', error.message);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+/**
+ * GET /api/attendees/audit
+ * Audit attendee data for duplicates, invalid emails, and missing data
+ */
+router.get('/audit', async (req, res) => {
+  try {
+    const audit = await auditAttendees();
+    res.json({ success: true, data: audit });
+  } catch (error) {
+    console.error('Error auditing attendees:', error.message);
     res.status(500).json({ success: false, error: error.message });
   }
 });
