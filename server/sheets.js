@@ -229,9 +229,9 @@ export async function getAttendees() {
   const { rows, columns, rowNumbers } = await getSheetRowsAndColumns(client);
 
   return rows.map((row, idx) => ({
-    id: row[columns.ID] || '',
-    firstName: row[columns.FIRST_NAME] || '',
-    lastName: row[columns.LAST_NAME] || '',
+    id: (row[columns.ID] || '').toString().trim(),
+    firstName: (row[columns.FIRST_NAME] || '').toString().trim(),
+    lastName: (row[columns.LAST_NAME] || '').toString().trim(),
     name:
       `${row[columns.FIRST_NAME] || ''} ${row[columns.LAST_NAME] || ''}`.trim() ||
       row[columns.NAME] ||
@@ -250,11 +250,12 @@ export async function getAttendees() {
 }
 
 /**
- * Get a single attendee by ID
+ * Get a single attendee by ID (case-insensitive, whitespace-tolerant)
  */
 export async function getAttendeeById(id) {
   const attendees = await getAttendees();
-  return attendees.find((a) => a.id === id) || null;
+  const normalizedId = (id || '').toString().trim().toLowerCase();
+  return attendees.find((a) => a.id.toLowerCase() === normalizedId) || null;
 }
 
 /**
@@ -263,7 +264,8 @@ export async function getAttendeeById(id) {
  */
 async function findRowByAttendeeId(id) {
   const attendees = await getAttendees();
-  const attendee = attendees.find((a) => a.id === id);
+  const normalizedId = (id || '').toString().trim().toLowerCase();
+  const attendee = attendees.find((a) => a.id.toLowerCase() === normalizedId);
   return attendee ? attendee._sheetRow : -1;
 }
 

@@ -24,9 +24,10 @@ const BASE_URL = 'https://marketing-seminar-day-2026.onrender.com';
  * Send email via EmailJS (client-side)
  */
 async function sendEmailViaEmailJS(attendee) {
-  // Generate QR code URL using public API
-  const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(attendee.id)}`;
-  const eventPassUrl = `${BASE_URL}/?id=${attendee.id}`;
+  // Generate event pass URL
+  const eventPassUrl = `${BASE_URL}/?id=${encodeURIComponent(attendee.id)}`;
+  // QR code should encode the FULL URL so scanning takes them directly to their pass
+  const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(eventPassUrl)}`;
   const scheduleText = [
     '8:15 AM — Registration',
     '9:35 AM — Keynote Address',
