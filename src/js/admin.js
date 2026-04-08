@@ -117,6 +117,11 @@ async function loadAttendees() {
 function renderAttendeeTable(attendees) {
   const tbody = document.getElementById('attendee-tbody');
 
+  // Preserve currently selected checkboxes before re-render
+  const selectedIds = new Set(
+    Array.from(document.querySelectorAll('.attendee-cb:checked')).map(cb => cb.dataset.id)
+  );
+
   if (attendees.length === 0) {
     tbody.innerHTML = `
       <tr>
@@ -132,7 +137,7 @@ function renderAttendeeTable(attendees) {
     .map(
       (a) => `
     <tr id="row-${a.id}">
-      <td style="text-align: center;"><input type="checkbox" class="attendee-cb" data-id="${a.id}" onchange="updateSelectedCount()" /></td>
+      <td style="text-align: center;"><input type="checkbox" class="attendee-cb" data-id="${a.id}" ${selectedIds.has(a.id) ? 'checked' : ''} onchange="updateSelectedCount()" /></td>
       <td>
         <div class="attendee-name-cell">
           <div class="avatar-sm">${getInitials(a.name)}</div>
@@ -166,6 +171,9 @@ function renderAttendeeTable(attendees) {
   `
     )
     .join('');
+
+  // Update selected count after re-render
+  updateSelectedCount();
 }
 
 // ----- Check-in Actions -----
