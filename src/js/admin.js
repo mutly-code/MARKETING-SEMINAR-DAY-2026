@@ -16,8 +16,8 @@ let pollingInterval = null;
 const POLL_INTERVAL_MS = 30000; // 30 seconds
 
 // ----- EmailJS Configuration -----
-const EMAILJS_SERVICE_ID = 'service_go8tysc';
-const EMAILJS_TEMPLATE_ID = 'template_39coob5';
+const EMAILJS_SERVICE_ID = 'service_8hdt46j';
+const EMAILJS_TEMPLATE_ID = 'template_0h5rgml';
 const BASE_URL = 'https://marketing-seminar-day-2026.onrender.com';
 
 /**
